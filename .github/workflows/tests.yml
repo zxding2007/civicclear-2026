@@ -17,4 +17,4 @@ jobs:
       - name: Run tests
         run: python -m pytest -q
       - name: Check syntax
-        run: python -m compileall -q app.py pipeline calculator.py build_cache.py
+        run: python -m compileall -q app.py pipeline calculator.py build_cache.py build_site.py

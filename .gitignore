@@ -5,3 +5,6 @@ __pycache__/
 .streamlit/secrets.toml
 *.pyc
 .DS_Store
+
+# design-skill check output (screenshots, browser profiles)
+site/.taste-skill/

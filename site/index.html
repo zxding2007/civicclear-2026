@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="en" data-type="software" data-radius="soft" data-ground="sky" data-buttons="arrow" data-motion>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>CivicClear: Toronto council decisions in plain words</title>
+<meta name="description" content="Pick a Toronto council decision and see what was decided, which stage it reached, which wards it names and whether you can still comment, with every line linked to the City's record.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="CivicClear: Toronto council decisions in plain words">
+<meta property="og:description" content="What council decided, where it stands and what you can still do, linked to the City's record.">
+<meta property="og:image" content="share.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#f7f7f5">
+<meta name="site-kind" content="software">
+<meta name="page-type" content="software">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@400..700&family=Funnel+Sans:wght@400..600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/system.css">
+<link rel="stylesheet" href="assets/ui/cards.css">
+<link rel="stylesheet" href="assets/motion/motion.css">
+<link rel="stylesheet" href="assets/backgrounds/backgrounds.css">
+<link rel="stylesheet" href="assets/layout/layout.css">
+<link rel="stylesheet" href="assets/icons/icon.css">
+<style>
+:root {
+  --p-bg: #f7f7f5; --p-surface: #ebebe8; --p-ink: #000000; --p-muted: #666662;
+  --p-accent: #d0106f; --p-accent-ink: #ffffff; --p-action: #d0106f; --p-action-ink: #ffffff;
+  --p-inv-bg: #000000; --p-inv-surface: #010101; --p-inv-ink: #f7f7f5; --p-inv-muted: #828280;
+  --p-inv-accent: #d0106f; --p-inv-accent-ink: #ffffff; --p-inv-action: #d0106f; --p-inv-action-ink: #ffffff;
+  --font-display: "Funnel Display", system-ui, sans-serif;
+  --font-text: "Funnel Sans", system-ui, sans-serif;
+  --font-mono: "DM Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --display-weight: 400;
+  --display-tracking: -0.03em;
+  --display-tracking-xl: -0.04em;
+  --ly-scale: 0.98;
+}
+</style>
+<link rel="stylesheet" href="assets/ui/base.css">
+<link rel="stylesheet" href="assets/diagrams/diagram.css">
+<link rel="stylesheet" href="page.css">
+<script>document.documentElement.classList.add('m-enter');setTimeout(()=>document.documentElement.classList.add('m-enter-done'),700)</script>
+<script src="assets/backgrounds/backgrounds.js"></script>
+<script>document.documentElement.classList.add('mo-js');setTimeout(()=>document.documentElement.classList.add('mo-safe'),2500)</script>
+<link rel="modulepreload" href="assets/moments/moments.js">
+<link rel="modulepreload" href="assets/moments/lib.js">
+<link rel="modulepreload" href="assets/moments/word-highlight/moment.js">
+</head>
+<body>
+<!-- type: software (site-kind software)
+     deal: hero centred, nav nav-cards, close close-type, footer footer-dark, rhythm space, buttons arrow,
+     mark ring, ground sky, palette card-pastels, type funnel; effect painterly-landscape in the hero window;
+     card ground grain-gradient (the steps); moments: word-highlight (#statement) -->
+
+<header class="nav">
+  <div class="wrap nav__bar">
+    <a class="skip-link" href="#top">Skip to content</a>
+    <a class="nav__logo" href="#top"><span class="mark" data-mark="ring" aria-hidden="true"></span>CivicClear</a>
+    <nav class="nav__links" aria-label="Main">
+      <div class="nav__item">
+        <a class="nav__link" href="#decisions">Decisions <svg class="chev" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        <div class="nav__menu">
+          <div class="wrap grid">
+            <a class="menu-card span-4" href="#decisions">
+              <div class="panel mini"><div class="mini__card"><span class="chip chip--no">Not approved</span><b>Cummer Station motion</b><small>Council took note only</small></div></div>
+              <span class="t-card">Decision explorer</span>
+              <span class="t-small muted">Four decisions, each read in plain words</span>
+            </a>
+            <a class="menu-card span-4" href="#how">
+              <div class="panel mini"><div class="mini__card mini__steps"><i class="on"></i><i class="on"></i><i></i><small>Committee voted. Council next.</small></div></div>
+              <span class="t-card">How a decision moves</span>
+              <span class="t-small muted">Staff, then committee, then City Council</span>
+            </a>
+            <a class="menu-card span-4" href="#tax">
+              <div class="panel mini"><div class="mini__card"><small>At $700,000 assessed</small><b>+$92.57 a year</b><small>2026 against 2025, city portion</small></div></div>
+              <span class="t-card">Tax calculator</span>
+              <span class="t-small muted">Your 2025 and 2026 city tax, side by side</span>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="nav__item"><a class="nav__link" href="#how">Stages</a></div>
+      <div class="nav__item"><a class="nav__link" href="#tax">Tax</a></div>
+      <div class="nav__item"><a class="nav__link" href="#checks">Checks</a></div>
+      <div class="nav__item"><a class="nav__link" href="#faq">Questions</a></div>
+    </nav>
+    <div class="nav__actions">
+      <a class="btn btn--primary" href="#decisions">See the decisions</a>
+    </div>
+    <button class="nav__toggle" type="button" aria-expanded="false" aria-label="Menu">
+      <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M2 5h14M2 13h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+    </button>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero hero--centred" data-enter aria-labelledby="hero-h">
+    <div class="wrap"><div class="hero-text">
+      <div class="hero__c">
+        <a class="pill" href="#decisions"><span>4 decisions checked on Nov 12, 2026</span><span class="muted">See them below</span></a>
+        <h1 id="hero-h">Toronto council decisions, explained</h1>
+        <p class="hero__lead">Pick a decision to see what was decided, which stage it reached, which wards it names and whether you can still comment. Every line links to the City's record.</p>
+        <div class="btn-row"><a class="btn btn--primary" href="#decisions">See the decisions<svg class="m-arrow" viewBox="0 0 12 12" aria-hidden="true"><path class="m-arrow__stem" d="M1 6h8"/><path class="m-arrow__head" d="M4.5 2.5 8 6l-3.5 3.5"/></svg></a><a class="btn btn--secondary" href="#tax">Try the tax calculator</a></div>
+      </div>
+      <div class="hero__window" data-fx="painterly-landscape" data-fx-seed="7" data-fx-palette='{"bg":"#a3b0b6","accent":"#c49a6c"}' data-fx-params='{"blur":1,"brush":0.35,"slope":0,"hillY":0.3,"horizon":0.62}' role="img" aria-label="CivicClear reading the Cummer Station motion: City Council received it for information, which means it was not approved">
+        <div class="ly-piece hw" aria-hidden="true">
+          <div class="hw__bar"><span class="hw__dots"><i></i><i></i><i></i></span><span><b>Cummer Station motion</b> · DM41.4</span><span class="sp"></span><span>City Council · May 2026</span></div>
+          <div class="hw__body">
+            <div class="hw__list">
+              <div class="hw__row is-on"><b>Cummer Station motion</b><span class="chip chip--no">Noted only</span></div>
+              <div class="hw__row"><b>Little Jamaica framework</b><span class="chip chip--wait">Committee only</span></div>
+              <div class="hw__row"><b>McCleary temporary uses</b><span class="chip chip--yes">Approved</span></div>
+            </div>
+            <div class="hw__read" data-ly-steps="900">
+              <p class="hw__quote"><small>The City's record says</small>"City Council on May 20 and 21, 2026, received Item DM41.4 for information."</p>
+              <p class="hw__tool" data-step>Quote found in the saved City record</p>
+              <p class="hw__answer" data-step><b>Not approved.</b> Council only took note of the motion. This vote did not approve the station.</p>
+              <div class="hw__acts" data-step><span class="is-main">Open the City page</span><span>What "received" means</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div></div>
+  </section>
+
+  <section class="section" id="decisions" style="--h: 2" aria-labelledby="decisions-h">
+    <div class="wrap">
+      <div class="grid">
+        <h2 class="span-5" id="decisions-h">Four council decisions, in plain words</h2>
+        <p class="span-6 start-7 muted t-lead">Choose your ward, then a decision. The right side says what happened, where it stands and what you can still do, with the City's own words under each line. <a class="link" href="#how">See how a decision moves</a></p>
+      </div>
+      <div class="ui ui-app app fill" role="region" aria-label="Decision explorer" data-visual>
+        <div class="app__pane app__pane--list">
+          <div class="ex__head">
+            <label for="ward">Your ward</label>
+            <select id="ward"><option value="">Any ward</option></select>
+          </div>
+          <ul class="ex__list" id="list" role="list"></ul>
+          <dl class="legend">
+            <div><dt><span class="chip chip--no">Noted only</span></dt><dd>Council took note. Nothing was approved.</dd></div>
+            <div><dt><span class="chip chip--wait">Committee only</span></dt><dd>A committee voted. City Council has not decided.</dd></div>
+            <div><dt><span class="chip chip--yes">Approved</span></dt><dd>City Council made the final decision.</dd></div>
+            <div><dt><span class="chip chip--here">Names your ward</span></dt><dd>The record lists the ward you chose.</dd></div>
+          </dl>
+          <p class="ex__note">Sources checked on <span id="checked-on">Nov 12, 2026</span>. Not legal advice.</p>
+        </div>
+        <div class="app__pane app__pane--open" id="open" tabindex="-1" aria-live="polite"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="how" style="--hm: 2" aria-labelledby="how-h">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 id="how-h">A Toronto decision moves in 3 steps <span class="muted">and the wording tells you which step you are reading.</span></h2>
+      </div>
+      <div class="grid">
+        <article class="card card--row card--open span-4 m-nolift">
+          <span class="step-num">1</span>
+          <h3>Staff advise council</h3>
+          <p>City staff send a report saying what they advise. Nothing is decided at this step.</p>
+          <div class="panel" data-fx="grain-gradient" data-fx-seed="31" data-fx-palette='{"bg":"#c6d3df","surface":"#d6e0e9","ink":"#25303a","accent":"#3f6a92"}' data-fx-params='{"drift":0,"grainMotion":0}'>
+            <div class="stage"><div class="at-rise fit phrase" style="--fit-max:300px;--ax:max(24px, 50% - 150px);--ay:48px;--ay-sm:24px">
+              <div class="ui ui-panel phrase__card"><small>The record says</small><b>"Recommended"</b><span class="phrase__arrow" aria-hidden="true">↓</span><small>In plain words</small><p>Advice only. No vote yet.</p></div>
+            </div></div>
+          </div>
+        </article>
+        <article class="card card--row card--open span-4 m-nolift">
+          <span class="step-num">2</span>
+          <h3>A committee of council votes</h3>
+          <p>Councillors on a committee debate it. This is where residents can ask to speak.</p>
+          <div class="panel" data-fx="grain-gradient" data-fx-seed="32" data-fx-palette='{"bg":"#c6d3df","surface":"#d6e0e9","ink":"#25303a","accent":"#3f6a92"}' data-fx-params='{"drift":0,"grainMotion":0}'>
+            <div class="stage"><div class="at-rise fit phrase" style="--fit-max:300px;--ax:max(24px, 50% - 150px);--ay:48px;--ay-sm:24px">
+              <div class="ui ui-panel phrase__card"><small>The record says</small><b>"Adopted with amendments"</b><span class="phrase__arrow" aria-hidden="true">↓</span><small>In plain words</small><p>The committee agreed to a changed version. Not final.</p></div>
+            </div></div>
+          </div>
+        </article>
+        <article class="card card--row card--open span-4 m-nolift">
+          <span class="step-num">3</span>
+          <h3>City Council decides</h3>
+          <p>Council makes the final call. It can also just note an item without approving it.</p>
+          <div class="panel" data-fx="grain-gradient" data-fx-seed="33" data-fx-palette='{"bg":"#c6d3df","surface":"#d6e0e9","ink":"#25303a","accent":"#3f6a92"}' data-fx-params='{"drift":0,"grainMotion":0}'>
+            <div class="stage"><div class="at-rise fit phrase" style="--fit-max:300px;--ax:max(24px, 50% - 150px);--ay:48px;--ay-sm:24px">
+              <div class="ui ui-panel phrase__card"><small>The record says</small><b>"Received for information"</b><span class="phrase__arrow" aria-hidden="true">↓</span><small>In plain words</small><p>Noted only. Not approved.</p></div>
+            </div></div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section statement" id="statement" data-moment="word-highlight" aria-label="What CivicClear tells you">
+    <div class="wrap">
+      <p class="mo-wh__text">Received for information is not approved. A committee vote is not City Council's final word. CivicClear tells you <strong>which one</strong> you are reading, and shows the line in the City's record that says so.</p>
+    </div>
+  </section>
+
+  <section class="section" id="tax" style="--hm: 2" aria-labelledby="tax-h">
+    <div class="wrap">
+      <div class="grid fill">
+        <div class="span-5 stack-6">
+          <h2 id="tax-h">Compare your 2025 and 2026 city tax</h2>
+          <p class="t-lead">Type the assessed value from your MPAC notice. CivicClear applies the residential rate Council set each year to that same value.</p>
+          <ul class="facts">
+            <li>2025 rate <span id="rate-2025">0.601087%</span>, from item 2025.CC27.1</li>
+            <li>2026 rate <span id="rate-2026">0.614311%</span>, from item 2026.CC38.1</li>
+            <li>City portion only: education tax is not included</li>
+          </ul>
+          <a class="link" href="https://secure.toronto.ca/council/agenda-item.do?item=2026.CC38.1" rel="noopener">Read the 2026 tax rate item</a>
+        </div>
+        <div class="span-6 start-7 calc-frame" data-visual>
+          <form class="ui ui-panel calc" id="calc" novalidate>
+            <div class="calc__head"><b>Before and after</b><span>Residential, city portion</span></div>
+            <label for="value">Assessed value</label>
+            <div class="calc__input"><span aria-hidden="true">$</span><input id="value" name="value" type="text" size="10" inputmode="numeric" autocomplete="off" value="700,000" aria-describedby="value-err"></div>
+            <p class="calc__err" id="value-err" hidden>Type the assessed value as a whole number of dollars, like 700000.</p>
+            <dl class="calc__out">
+              <div><dt>2025</dt><dd id="before">$4,207.61</dd></div>
+              <div><dt>2026</dt><dd id="after">$4,300.18</dd></div>
+              <div class="calc__diff"><dt>Change</dt><dd id="diff">+$92.57 a year</dd></div>
+            </dl>
+            <p class="calc__month" id="month">About $7.71 more a month.</p>
+            <div class="bars" aria-hidden="true">
+              <div class="bars__row"><span>2025</span><i id="bar-2025" style="--w: 97.8%"></i></div>
+              <div class="bars__row"><span>2026</span><i id="bar-2026" style="--w: 100%"></i></div>
+            </div>
+            <p class="calc__foot" id="rate-change">The residential rate went up 2.2% from 2025 to 2026. The same assessed value is used for both years.</p>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="checks" aria-labelledby="checks-h">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 id="checks-h">3 checks on every council decision <span class="muted">run in code before anything shows.</span></h2>
+      </div>
+      <div class="grid">
+        <article class="card card--row card--open span-6 m-nolift">
+          <h3>From the City's record to a decision card</h3>
+          <p>The Claude API drafts a card from the saved record. Three checks run before anything is shown.</p>
+          <div class="panel"><div class="dg" data-diagram data-dg-still><script type="application/json">{"layout":"lanes","alt":"The saved City record goes to the Claude API, which drafts a card; then quotes are matched, the status is set by rule and a person reviews it.","ground":"none","motion":{"pulse":"none"},"input":{"label":"Record","icon":"ui:file-text","sub":"City item"},"core":{"label":"Claude","icon":"ui:bot"},"lanes":[{"label":"Quotes","icon":"ui:quote","done":true,"sub":"Matched to the text"},{"label":"Status","icon":"ui:list-checks","done":true,"sub":"Set by rule"},{"label":"Review","icon":"ui:user-check","sub":"By a person"}]}</script></div></div>
+        </article>
+        <article class="card card--row card--open span-6 m-nolift">
+          <h3>What the checks stop on a decision card</h3>
+          <ul class="rules">
+            <li><b>A made-up quote.</b> If the words are not in the City's text, the line is marked unverified.</li>
+            <li><b>A wrong status.</b> An unverified stage can never count as an approval.</li>
+            <li><b>A guessed deadline.</b> A date shows only when an official page states it.</li>
+          </ul>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="faq" aria-labelledby="faq-h">
+    <div class="wrap">
+      <div class="grid">
+        <div class="span-5 stack-4">
+          <h2 id="faq-h">Questions</h2>
+          <p class="muted">What people ask before they trust a page about their city.</p>
+          <a class="gh" href="https://github.com/zxding2007/civicclear-2026" rel="noopener"><span class="ic-tile ic-tile--40"><img class="ic ic-40 ic-ink" src="assets/icons/github.svg" alt="" width="40" height="39" loading="lazy"></span><span class="link">Read the code on GitHub</span></a>
+        </div>
+        <div class="faq span-6 start-7">
+          <div class="faq__item"><h3>Is this an official City of Toronto site?</h3><p>No. CivicClear is a student project for CIVIC Hack 2026. Every line links to the City's record, and the record wins if they differ.</p></div>
+          <div class="faq__item"><h3>Does CivicClear call an AI model while I use it?</h3><p>No. These four cards were written from the City's text and pass the same checks the Claude API pipeline runs on a new item. A team member still has to sign each one off.</p></div>
+          <div class="faq__item"><h3>Where does a council comment deadline come from?</h3><p>Only from an official City page. When the record names no deadline, CivicClear says so and links to the City's general Have your say page.</p></div>
+          <div class="faq__item"><h3>Is the tax figure my real Toronto bill?</h3><p>No. It is the city portion at the same assessed value in both years. Education tax, reassessment, credits and fees are left out.</p></div>
+          <div class="faq__item"><h3>How current are the decisions?</h3><p>Sources were checked on November 12, 2026. A consultation can close or be extended, so open the City page before you act.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer closing footer--dark ground-inverse" id="contact" aria-labelledby="close-h">
+  <div class="wrap">
+    <div class="closing__cta close--type">
+      <div class="section-head">
+        <h2 id="close-h">See what council decided near you</h2>
+        <p>Four decisions, every line linked to the City's record.</p>
+      </div>
+      <a class="btn btn--primary btn--xl btn--wide" href="#decisions">See the decisions<svg class="m-arrow" viewBox="0 0 12 12" aria-hidden="true"><path class="m-arrow__stem" d="M1 6h8"/><path class="m-arrow__head" d="M4.5 2.5 8 6l-3.5 3.5"/></svg></a>
+    </div>
+    <div class="closing__links">
+      <div class="grid">
+        <div class="span-4 stack-4">
+          <a class="nav__logo" href="#top"><span class="mark" data-mark="ring" aria-hidden="true"></span>CivicClear</a>
+          <p class="footer__lede">Toronto council decisions in plain words.</p>
+        </div>
+        <div class="span-2 footer__col"><h3>Decisions</h3><ul><li><a href="#decisions">Explorer</a></li><li><a href="#how">Stages</a></li></ul></div>
+        <div class="span-2 footer__col"><h3>Tax</h3><ul><li><a href="#tax">Calculator</a></li></ul></div>
+        <div class="span-2 footer__col"><h3>Checks</h3><ul><li><a href="#checks">How claims are checked</a></li></ul></div>
+        <div class="span-2 footer__col"><h3>Questions</h3><ul><li><a href="#faq">Questions</a></li><li><a href="https://github.com/zxding2007/civicclear-2026" rel="noopener">GitHub</a></li></ul></div>
+      </div>
+      <div class="footer__legal">
+        <span>&copy; 2026 CivicClear. Not affiliated with the City of Toronto. Not legal or tax advice.</span>
+        <div class="socials"></div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="data.js"></script>
+<script src="app.js" defer></script>
+<script type="module" src="assets/system.js"></script>
+<script type="module" src="assets/motion/motion.js"></script>
+<script type="module" src="assets/layout/layout.js"></script>
+<script type="module" src="assets/diagrams/mount.js"></script>
+</body>
+</html>
