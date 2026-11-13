@@ -2,6 +2,8 @@
 
 **CIVIC Hack 2026 prototype · City of Toronto · Source-linked decision explainers**
 
+**Live website: https://zxding2007.github.io/civicclear-2026/** — opens in any browser, no sign-in. Published from `site/` by GitHub Actions on every push to `main`.
+
 CivicClear gives residents a plain-language summary of **what was proposed**, **which decision-making body actually acted**, **which wards appear in the record**, **what is and is not known about participation**, and **the text supporting each claim**.
 
 > **Project state:** Runnable source-linked demo with four curated Toronto agenda examples and an optional, password-gated Claude API analyser. The four static examples were drafted from official agenda excerpts and verified for quote matching; they have **not** received a second independent human sign-off. Live Streamlit demo: **https://civicclear-2026.onrender.com/** (Render Free Plan). Live API calls have **not** been tested in this environment.
@@ -106,7 +108,9 @@ Key design choices: (1) structured JSON and document citations require separate 
 
 ## Deployment
 
-This repository is already public at https://github.com/zxding2007/civicclear-2026 and deployed as a Python Streamlit service on Render Free Plan at https://civicclear-2026.onrender.com/. In [Streamlit Community Cloud](https://docs.streamlit.io/deploy/streamlit-community-cloud), create an app with `app.py` as the entrypoint and Python 3.12. Configure Secrets only if you want to enable admin analysis. Check both desktop and mobile views and wake the free instance before judging. A public deployed URL is optional according to Devpost, but a repository, 2–3 minute demo and one-page report are required.
+The static website in `site/` is published to GitHub Pages at https://zxding2007.github.io/civicclear-2026/ by `.github/workflows/pages.yml` (tests and `build_site.py` run first; a status mismatch stops the publish). It needs no server or API key; `site/index.html` also opens directly from disk.
+
+This repository is already public at https://github.com/zxding2007/civicclear-2026 and the Streamlit version is deployed as a Python Streamlit service on Render Free Plan at https://civicclear-2026.onrender.com/. In [Streamlit Community Cloud](https://docs.streamlit.io/deploy/streamlit-community-cloud), create an app with `app.py` as the entrypoint and Python 3.12. Configure Secrets only if you want to enable admin analysis. Check both desktop and mobile views and wake the free instance before judging. A public deployed URL is optional according to Devpost, but a repository, 2–3 minute demo and one-page report are required.
 
 ## Deliverables
 
