@@ -32,4 +32,9 @@
 - [Streamlit documentation](https://docs.streamlit.io/); [Community Cloud](https://docs.streamlit.io/deploy/streamlit-community-cloud).
 - [Pydantic](https://docs.pydantic.dev/); [pypdf](https://pypdf.readthedocs.io/); [pytest](https://docs.pytest.org/); [python-dotenv](https://github.com/theskumar/python-dotenv).
 
+## Website design kit and AI coding tools
+
+- **taste-skill** frontend kit, bundled under `site/assets/` (CSS system, layout, motion, diagram and icon files). Third-party code, used as shipped.
+- **Claude Code** (Anthropic) built the static website and its build script; **ChatGPT** (OpenAI) drafted the Python app, the four cards and the documents. Details in [`ai_usage.md`](ai_usage.md).
+
 Versions are deliberately version-ranged in `requirements.txt` for Python 3.12. Obtain installed package versions with `pip freeze` for a release lock file and review each licence before redistributing dependencies.

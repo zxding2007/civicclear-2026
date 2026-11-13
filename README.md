@@ -6,7 +6,7 @@
 
 CivicClear gives residents a plain-language summary of **what was proposed**, **which decision-making body actually acted**, **which wards appear in the record**, **what is and is not known about participation**, and **the text supporting each claim**.
 
-> **Project state:** Runnable source-linked demo with four curated Toronto agenda examples and an optional, password-gated Claude API analyser. The four static examples were drafted from official agenda excerpts and verified for quote matching; they have **not** received a second independent human sign-off. Live Streamlit demo: **https://civicclear-2026.onrender.com/** (Render Free Plan). Live API calls have **not** been tested in this environment.
+> **Project state (Nov 13, 2026):** The static website above is the main demo. It shows four curated Toronto agenda items and never calls an AI model. The four cards were drafted with ChatGPT from official agenda excerpts and pass the automated quote and status checks; the team's human sign-off is **still pending** and each card says so. The repository also holds an earlier Streamlit version (https://civicclear-2026.onrender.com/, Render Free Plan, slow to wake) and an optional, password-gated Claude API analyser for new items. That analyser has only been exercised with a fake client: **no real API call has been made**.
 
 ## Why this exists
 
@@ -22,7 +22,7 @@ A statement like “received for information” may sound like approval to a res
 - **Have Your Say:** Never infer a comment deadline from a meeting date. For PH29.2, a *separate current City consultation portal* confirms an interactive feedback map through **November 30, 2026**; the app auto-stops advertising it as open afterward. Other items do not claim unverified open windows.
 - **Before & After:** A residential **municipal** property tax estimate comparing 2025 and 2026 at a *constant* MPAC assessed value. Education tax is excluded.
 - **Evidence and uncertainty:** Expand the original quote and source link for every example explanation, and see important unknowns.
-- **Optional admin analysis:** With an Anthropic key and admin password, paste official Toronto agenda text and an optional staff-report PDF for two separate AI passes: structured extraction and cited explanation.
+- **Optional admin analysis (Streamlit version only, untested live):** With an Anthropic key and admin password, paste official Toronto agenda text and an optional staff-report PDF for two separate AI passes: structured extraction and cited explanation.
 
 ### Four example items
 
@@ -71,7 +71,7 @@ python -m pytest -q
 python -m compileall -q app.py pipeline calculator.py build_cache.py
 ```
 
-Local initial result on 2026-11-12: **25 passed**, using bundled public-source excerpts. These tests do **not** imply full PDFs have been parsed or paid API calls have been verified.
+Local result on 2026-11-13: **30 passed**, using bundled public-source excerpts. These tests do **not** imply full PDFs have been parsed or paid API calls have been verified.
 
 ## Architecture and data flow
 
@@ -87,11 +87,14 @@ flowchart LR
     S --> C[(Cached JSON / admin preview)]
     E --> C
     D[(Four curated source-linked demo records)] --> U[Streamlit UI]
+    D --> B[build_site.py: quote check + status rule]
+    B --> W[Static website on GitHub Pages]
+    T --> B
     C --> U
     T[2025/2026 official municipal rates] --> U
 ```
 
-Key design choices: (1) structured JSON and document citations require separate API requests; (2) verified stages drive decision status in code, not model sentiment; (3) unknown participation stays unknown; (4) defaults use prebuilt files so an unprotected public page never incurs API cost. See [`docs/uml.md`](docs/uml.md).
+Key design choices: (1) structured JSON and document citations require separate API requests; (2) verified stages drive decision status in code, not model sentiment; (3) unknown participation stays unknown; (4) defaults use prebuilt files so an unprotected public page never incurs API cost; (5) the static website is built by `build_site.py`, which reruns the quote check and status rule and stops the publish if a computed status differs from the stored or golden one. The upper half of the diagram (Claude extraction and explanation) is the optional path for new items and has not been run against the real API. See [`docs/uml.md`](docs/uml.md).
 
 ## Accuracy checks and limitations
 
@@ -100,11 +103,20 @@ Key design choices: (1) structured JSON and document citations require separate 
 | Structured data | `DecisionCard` Pydantic model | Try real paid API calls |
 | Source check | Verbatim quote membership in provided text or extracted PDF text | Human comparison with original authoritative documents; normalized membership does **not** establish context |
 | Stage rule | `overall_status`, council precedence | Expand coverage for unusual Toronto procedural outcomes |
-| Golden examples | Four `golden.json` expected outcomes, 25 automated tests (including fake-SDK contract checks) | Independent human sign-off, cross-check full report PDFs |
+| Golden examples | Four `golden.json` expected outcomes, 30 automated tests (including fake-SDK contract checks) | Independent human sign-off, cross-check full report PDFs |
 | Privacy | Removes `Communications` / `Speakers` text sections | Not a substitute for comprehensive personal-data review, access controls or municipal privacy assessment |
 | Engagement | Absent verified current deadline → "not verified" | Manually verify current notices and participation windows |
 
 **Important:** The demo's ward matching is based on a ward *listed in the official item*, not a geocoded impact assessment. The calculator compares municipal taxes at a constant assessed value; it does not predict an actual person's 2025–2026 bills. This is not legal or tax advice. Live model-generated summaries must be reviewed before public use.
+
+## Who this may leave out
+
+- **English only.** No translation, although many Toronto residents read another language first.
+- **Online only.** People without a device or connection are not reached; the City's 311 line and the City Clerk's office remain the fallback.
+- **Four items.** It is a worked example, not a feed of every agenda item, and it does not update itself.
+- **Ward match, not address match.** A ward shows as relevant when the record names it. Renters, businesses or neighbours just across a ward boundary may be affected without being matched.
+- **Tax calculator is for owners.** It needs an MPAC assessed value, so it says nothing to tenants about rent.
+- **Accessibility is not audited.** The page has not been tested against WCAG 2.1 AA or with screen-reader users.
 
 ## Deployment
 
@@ -130,4 +142,4 @@ This repository is already public at https://github.com/zxding2007/civicclear-20
 
 ## Credits and licence
 
-Open-source Python libraries: Streamlit, Pydantic, Anthropic SDK, pypdf, python-dotenv and pytest. Records and tax rates originate from official City of Toronto pages (consult current municipal usage terms). AI assistance in code and writing is declared in [`docs/ai_usage.md`](docs/ai_usage.md). Prototype source code is supplied under the MIT licence; third-party content retains its own terms.
+Open-source Python libraries: Streamlit, Pydantic, Anthropic SDK, pypdf, python-dotenv and pytest. Records and tax rates originate from official City of Toronto pages (consult current municipal usage terms). The static website uses the taste-skill frontend kit (`site/assets/`: layout, motion, diagram and icon files) and was built with Claude Code. AI assistance in code and writing (ChatGPT and Claude) is declared in [`docs/ai_usage.md`](docs/ai_usage.md). Prototype source code is supplied under the MIT licence; third-party content retains its own terms.

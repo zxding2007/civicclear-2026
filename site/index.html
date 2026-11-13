@@ -241,8 +241,8 @@
       <div class="grid">
         <article class="card card--row card--open span-6 m-nolift">
           <h3>From the City's record to a decision card</h3>
-          <p>The Claude API drafts a card from the saved record. Three checks run before anything is shown.</p>
-          <div class="panel"><div class="dg" data-diagram data-dg-still><script type="application/json">{"layout":"lanes","alt":"The saved City record goes to the Claude API, which drafts a card; then quotes are matched, the status is set by rule and a person reviews it.","ground":"none","motion":{"pulse":"none"},"input":{"label":"Record","icon":"ui:file-text","sub":"City item"},"core":{"label":"Claude","icon":"ui:bot"},"lanes":[{"label":"Quotes","icon":"ui:quote","done":true,"sub":"Matched to the text"},{"label":"Status","icon":"ui:list-checks","done":true,"sub":"Set by rule"},{"label":"Review","icon":"ui:user-check","sub":"By a person"}]}</script></div></div>
+          <p>Each of the four cards was drafted with an AI assistant (ChatGPT) from the saved City record. Three checks run before anything is shown.</p>
+          <div class="panel"><div class="dg" data-diagram data-dg-still><script type="application/json">{"layout":"lanes","alt":"The saved City record goes to an AI assistant, which drafts a card; then quotes are matched, the status is set by rule and a person reviews it.","ground":"none","motion":{"pulse":"none"},"input":{"label":"Record","icon":"ui:file-text","sub":"City item"},"core":{"label":"AI draft","icon":"ui:bot"},"lanes":[{"label":"Quotes","icon":"ui:quote","done":true,"sub":"Matched to the text"},{"label":"Status","icon":"ui:list-checks","done":true,"sub":"Set by rule"},{"label":"Review","icon":"ui:user-check","sub":"By a person"}]}</script></div></div>
         </article>
         <article class="card card--row card--open span-6 m-nolift">
           <h3>What the checks stop on a decision card</h3>
@@ -266,9 +266,10 @@
         </div>
         <div class="faq span-6 start-7">
           <div class="faq__item"><h3>Is this an official City of Toronto site?</h3><p>No. CivicClear is a student project for CIVIC Hack 2026. Every line links to the City's record, and the record wins if they differ.</p></div>
-          <div class="faq__item"><h3>Does CivicClear call an AI model while I use it?</h3><p>No. These four cards were written from the City's text and pass the same checks the Claude API pipeline runs on a new item. A team member still has to sign each one off.</p></div>
+          <div class="faq__item"><h3>Does CivicClear call an AI model while I use it?</h3><p>No. The four cards were drafted ahead of time with ChatGPT from the City's text, then checked by code: every quote must appear in the saved record and the status is set by rule. A team member still has to sign each one off.</p></div>
           <div class="faq__item"><h3>Where does a council comment deadline come from?</h3><p>Only from an official City page. When the record names no deadline, CivicClear says so and links to the City's general Have your say page.</p></div>
           <div class="faq__item"><h3>Is the tax figure my real Toronto bill?</h3><p>No. It is the city portion at the same assessed value in both years. Education tax, reassessment, credits and fees are left out.</p></div>
+          <div class="faq__item"><h3>Who might this page leave out?</h3><p>It is in English only, needs an internet connection and covers four decisions. A ward match means the ward is named in the record, not that your street is affected. If that leaves you out, call 311 or contact the City Clerk's office.</p></div>
           <div class="faq__item"><h3>How current are the decisions?</h3><p>Sources were checked on November 12, 2026. A consultation can close or be extended, so open the City page before you act.</p></div>
         </div>
       </div>
