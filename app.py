@@ -15,7 +15,7 @@ from pipeline.clean import strip_personal_sections
 from pipeline.verify import verify_card, verify_explanation_segments
 from pipeline.schema import DecisionCard
 from pipeline.status import overall_status, LABELS
-from pipeline.evidence import read_evidence
+from pipeline.evidence import read_evidence, valid_official_url
 
 ROOT = Path(__file__).resolve().parent
 ITEMS = ROOT / 'data' / 'items'
@@ -64,7 +64,7 @@ def _status_box(code: str):
 
 
 def _source_link(url: str, label: str = 'Open official record'):
-    if url and url.startswith(('https://www.toronto.ca/', 'https://secure.toronto.ca/', 'https://haveyoursay.toronto.ca/')):
+    if url and valid_official_url(url):
         st.markdown(f'[{label}]({url})')
 
 
