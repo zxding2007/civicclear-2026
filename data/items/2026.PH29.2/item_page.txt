@@ -1,5 +1,5 @@
-# Curated public excerpts from the official Toronto agenda item.
-# Not the full original webpage. See item_url.
+# Curated excerpts from (a) the TMMIS agenda page, (b) the City of Toronto's project updates, and (c) the linked Have Your Say Toronto mapping portal.
+# These are selected excerpts, not a full copy of any page. Authoritative links and review date are in meta.json.
 
 This item was considered by Planning and Housing Committee on April 14, 2026 and was adopted with amendments.
 adopted with amendments.
@@ -7,3 +7,9 @@ report back with final recommendations in the fourth quarter of 2026.
 Wards: 5 - York South - Weston, 8 - Eglinton - Lawrence, 9 - Davenport, 12 - Toronto - St. Paul's
 Requested the Executive Director, Development Review, to undertake community and stakeholder consultation
 The draft Planning Framework will serve as the basis for consultation.
+
+# Separate City of Toronto project website (not the April agenda item):
+The Planning Framework Final Report will be shared with the Planning and Housing Committee in Q1 of 2027.
+
+# Linked City of Toronto Interactive Consultation Mapping portal (not the April agenda item):
+The map is open for feedback from April 24th to November 30th, 2026.

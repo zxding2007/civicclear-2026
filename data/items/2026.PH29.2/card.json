@@ -21,14 +21,15 @@
       }
     ],
     "conditions": [
-      "Committee requested community and stakeholder consultations and a final report in Q4 2026.",
-      "Committee requested a stakeholder advisory committee. These requests do not confirm an active consultation today."
+      "The April 2026 committee decision requested consultation and a report in Q4 2026; this is a historical direction, not proof that a final framework was adopted.",
+      "The official City project page now anticipates the Final Report being shared with Planning and Housing Committee in Q1 2027; this is a projected next step.",
+      "The City project page confirms the Stakeholder Advisory Committee has launched. The mapping activity is a separate public feedback channel."
     ],
     "participation": {
-      "can_still_comment": "not_stated",
-      "deadline_text": null,
-      "how": null,
-      "quote": null
+      "can_still_comment": "yes",
+      "deadline_text": "November 30, 2026 (Interactive Consultation Mapping tool; no time of day specified)",
+      "how": "Use the City of Toronto's Interactive Consultation Mapping tool linked in this panel to provide feedback on the Little Jamaica and Oakwood Vaughan Planning Framework.",
+      "quote": "The map is open for feedback from April 24th to November 30th, 2026."
     },
     "procedural_phrases": [
       {
@@ -38,8 +39,9 @@
       }
     ],
     "uncertainties": [
-      "The item does not confirm that public registration is currently open or provide a verified current deadline.",
-      "The requested Q4 2026 report-back is a planned next step, not an established final outcome."
+      "The agenda item's April decision does not state the current consultation deadline; the deadline comes from the later City project website and its linked mapping portal.",
+      "The online mapping tool could close or be extended; verify its current status at the official project portal before submitting.",
+      "The planning framework is still a draft; no City Council final approval of the completed framework is established by this item."
     ]
   },
   "verification": {
@@ -49,10 +51,11 @@
     "phrases": [
       true
     ],
-    "participation": null
+    "participation": true
   },
   "status": "committee_only",
   "generation_mode": "curated_demo_not_llm",
   "generated_at": "2026-11-12",
-  "model": null
+  "model": null,
+  "independent_source_crosscheck": "City of Toronto project page and its linked consultation portal, checked 2026-11-12; no team human sign-off"
 }

@@ -20,5 +20,33 @@
         "url": "https://secure.toronto.ca/council/agenda-item.do?item=2026.PH29.2"
       }
     ]
+  },
+  {
+    "text": "As checked on November 12, 2026, the City’s separate project consultation portal advertises an interactive feedback map open until November 30, 2026. This is a project feedback opportunity, not a new City Council vote.",
+    "sources": [
+      {
+        "document": "City of Toronto Have Your Say interactive mapping activity",
+        "cited_text": "The map is open for feedback from April 24th to November 30th, 2026.",
+        "page": null,
+        "url": "https://haveyoursay.toronto.ca/LJOV-Planning-Framework-CHRA"
+      }
+    ]
+  },
+  {
+    "text": "The City’s updated project page now anticipates the final framework report in Q1 2027; the April 2026 committee record had originally requested Q4 2026. Neither statement confirms that a final framework has been adopted.",
+    "sources": [
+      {
+        "document": "City of Toronto planning project update",
+        "cited_text": "The Planning Framework Final Report will be shared with the Planning and Housing Committee in Q1 of 2027.",
+        "page": null,
+        "url": "https://www.toronto.ca/city-government/planning-development/planning-studies-initiatives/little-jamaica-oakwood-vaughan-planning-framework/"
+      },
+      {
+        "document": "Toronto committee agenda item",
+        "cited_text": "report back with final recommendations in the fourth quarter of 2026.",
+        "page": null,
+        "url": "https://secure.toronto.ca/council/agenda-item.do?item=2026.PH29.2"
+      }
+    ]
   }
 ]

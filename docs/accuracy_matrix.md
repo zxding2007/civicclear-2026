@@ -1,24 +1,20 @@
-# Decision correctness matrix (initial source-linked checks)
+# Decision correctness matrix — independent official-source cross-check (Nov 12, 2026 ET)
 
-This is **not** an independent human accuracy audit. Source text was checked against TMMIS published pages and short demo excerpts; full official staff report PDFs still require team review.
+This is an **AI-assisted independent cross-check against primary City of Toronto records, NOT a signed human/team review**. It checks the decisions, scope, selected quotes, relevant report passages, and current participation updates. Complete staff reports, attachments and legal effect have **not** been exhaustively reviewed. Human team sign-off remains pending.
 
-| Item | Official source status | Programmatic output | Stage quote matched curated source text? | Review status |
+| Item | Agenda-history result | Cached app status | Ward(s) | Finding |
 | --- | --- | --- | --- | --- |
-| [DM41.4](https://secure.toronto.ca/council/agenda-item.do?item=2026.DM41.4) | Council received for information, no further action | `received` | Yes | Human pending |
-| [PH29.2](https://secure.toronto.ca/council/agenda-item.do?item=2026.PH29.2) | Planning and Housing Committee adopted with amendments | `committee_only` | Yes | Human pending |
-| [PH29.1](https://secure.toronto.ca/council/agenda-item.do?item=2026.PH29.1) | Committee action then City Council adopted without amendments | `final_adopted` | Yes (3 stages) | Human pending |
-| [CC38.1](https://secure.toronto.ca/council/agenda-item.do?item=2026.CC38.1) | City Council adopted with amendments | `final_amended` | Yes | Human pending |
+| [DM41.4](https://secure.toronto.ca/council/agenda-item.do?item=2026.DM41.4) | Council received for information, May 20–21 2026; no further action on this item | received | 18 | Match |
+| [PH29.2](https://secure.toronto.ca/council/agenda-item.do?item=2026.PH29.2) | Committee adopted with amendments, Apr 14 2026 | committee_only | 5, 8, 9, 12 | Match; participation updated using a **separate** official project source |
+| [PH29.1](https://secure.toronto.ca/council/agenda-item.do?item=2026.PH29.1) | Committee Apr 14, Council adopted without amendments Apr 22–23 2026 | final_adopted | 14 | Match; provincial/natural hazard approvals may still be required before bylaw enactment |
+| [CC38.1](https://secure.toronto.ca/council/agenda-item.do?item=2026.CC38.1) | Council adopted with amendments, Feb 10 2026 | final_amended | All | Match; rate checked against enacted tax by-laws |
 
-## Numerical check
+## Corrected current participation
 
-2025 Toronto residential municipal tax rate incl. City Building Fund is **0.601087%** ([2025.CC27.1, Column VI](https://secure.toronto.ca/council/agenda-item.do?item=2025.CC27.1)). 2026 is **0.614311%** ([2026.CC38.1, Column VI](https://secure.toronto.ca/council/agenda-item.do?item=2026.CC38.1)). At an illustrative unchanged $700,000 assessment:
+The April 2026 PH29.2 decision called for community consultation and a Q4 2026 report, **but this is historical direction**. The [City's current planning project page](https://www.toronto.ca/city-government/planning-development/planning-studies-initiatives/little-jamaica-oakwood-vaughan-planning-framework/) now announces a **Q1 2027** final report. Its linked [official mapping portal](https://haveyoursay.toronto.ca/LJOV-Planning-Framework-CHRA) says public feedback is open **April 24–November 30, 2026**. The app now gives that specific channel and deadline with a source link, and switches to expired once the stated date passes. No hour-of-day deadline has been assumed.
 
-- 2025: $4,207.61
-- 2026: $4,300.18
-- Difference: +$92.57
+## Tax cross-check (enacted by-laws, not just proposed report)
 
-The test suite checks these outputs using decimal half-up rounding. Education tax is excluded. This should never be described as a property owner's actual increase.
+2025 **0.601087%** is confirmed in [By-law 105-2025](https://www.toronto.ca/legdocs/bylaws/2025/law0105.pdf), and 2026 **0.614311%** in [By-law 133-2026](https://www.toronto.ca/legdocs/bylaws/2026/law0133.pdf); both are residential municipal rates *including City Building Fund*, excluding education tax. Constant $700,000 MPAC assessed value: 2025 $4,207.61, 2026 $4,300.18, illustrative change $92.57.
 
-## Unit test coverage
-
-`python -m pytest -q` -> **14 passed** on 2026-11-12 (offline container environment). Tests cover status precedence, an unverified Council quote that must not count as adoption, privacy section removal, fabricated quote rejection, four embedded source-backed examples, and tax comparisons. No Streamlit browser launch or paid API test ran in the current environment.
+For the evidence trail, limitations and review checklist, see [official-source audit](official_source_audit_2026-11-12.md). Unit tests only verify consistency with curated excerpts, not their independent truth.

@@ -63,7 +63,7 @@ def _status_box(code: str):
 
 
 def _source_link(url: str, label: str = 'Open official record'):
-    if url and url.startswith(('https://www.toronto.ca/', 'https://secure.toronto.ca/')):
+    if url and url.startswith(('https://www.toronto.ca/', 'https://secure.toronto.ca/', 'https://haveyoursay.toronto.ca/')):
         st.markdown(f'[{label}]({url})')
 
 
@@ -147,8 +147,14 @@ def _show_card(card: DecisionCard, status: str, verified: dict, explanation: lis
 
     st.markdown('### Have Your Say')
     part = card.participation
-    if part.can_still_comment == 'yes' and verified.get('participation'):
-        st.success('This record states participation is open. Confirm the details on the official page before acting.')
+    # Historical meeting decisions and current project engagement are distinct.
+    # Do not continue advertising a dated opportunity as open after its stated end date.
+    feedback_end = meta.get('participation_end_date')
+    feedback_expired = bool(feedback_end and date.today() > date.fromisoformat(feedback_end))
+    if part.can_still_comment == 'yes' and verified.get('participation') and not feedback_expired:
+        st.success('The linked City of Toronto project portal advertises a current public feedback opportunity. Confirm that the form remains open before submitting.')
+    elif part.can_still_comment == 'yes' and verified.get('participation') and feedback_expired:
+        st.info('The cited feedback period has passed. Check the City project page for a new opportunity or extension.')
     elif part.can_still_comment == 'no' and verified.get('participation'):
         st.info('The cited record says this participation period is closed.')
     else:
@@ -158,9 +164,11 @@ def _show_card(card: DecisionCard, status: str, verified: dict, explanation: lis
     if part.how and verified.get('participation'):
         st.write('Method: ' + part.how)
     st.markdown(f'[Toronto: Have Your Say — participation instructions]({HAVE_YOUR_SAY})')
-    _source_link(meta.get('item_url', ''), 'Check this item for upcoming meetings / notices')
+    _source_link(meta.get('item_url', ''), 'Official council / committee decision history')
+    _source_link(meta.get('participation_source_url', ''), 'Official interactive feedback map / deadline')
+    _source_link(meta.get('consultation_project_url', ''), 'City project updates and next steps')
     if card.item_id == '2026.PH29.2':
-        st.info('The committee requested future community consultation and Q4 2026 recommendations; this alone does not prove registration is open now.')
+        st.info('The committee asked for a Q4 2026 report in April; the separate City project webpage now anticipates a final report in Q1 2027. These are plans, not a final Council vote.')
 
     st.markdown('### Important conditions and uncertainties')
     for line in card.conditions:

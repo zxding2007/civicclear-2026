@@ -7,8 +7,10 @@
     "9 - Davenport",
     "12 - Toronto - St. Paul's"
   ],
-  "deadline_stated": false,
+  "deadline_stated": true,
   "source_url": "https://secure.toronto.ca/council/agenda-item.do?item=2026.PH29.2",
   "checked_on": "2026-11-12",
-  "checked_by": "source-based draft; independent team human check REQUIRED"
+  "checked_by": "AI-assisted cross-check of official City and consultation portal sources; independent human team reviewer still required",
+  "deadline_source": "https://haveyoursay.toronto.ca/LJOV-Planning-Framework-CHRA",
+  "deadline_text": "November 30, 2026"
 }

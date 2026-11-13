@@ -10,6 +10,10 @@
 - [2026.CC38.1 — 2026 Budget Implementation](https://secure.toronto.ca/council/agenda-item.do?item=2026.CC38.1). Residential municipal rate including City Building Fund 0.614311%, Column VI.
 - [2025.CC27.1 — 2025 Budget Implementation](https://secure.toronto.ca/council/agenda-item.do?item=2025.CC27.1). Residential municipal rate including City Building Fund 0.601087%, Column VI.
 - [City of Toronto property tax rates](https://www.toronto.ca/services-payments/property-taxes-utilities/property-tax/property-tax-rates-and-fees/). Lists separate municipal, education and City Building Fund components.
+- [Little Jamaica/Oakwood Vaughan project updates](https://www.toronto.ca/city-government/planning-development/planning-studies-initiatives/little-jamaica-oakwood-vaughan-planning-framework/). City project page, checked 2026-11-12, announces Q1 2027 final report and Nov 30, 2026 mapping deadline; separate from the April agenda record.
+- [Official Little Jamaica/Oakwood Vaughan interactive feedback map](https://haveyoursay.toronto.ca/LJOV-Planning-Framework-CHRA). Portal states April 24–November 30, 2026 feedback window; does not establish any other active meeting registration.
+- [2025 Tax Levy By-law 105-2025](https://www.toronto.ca/legdocs/bylaws/2025/law0105.pdf). Municipal residential end rate, Column 5: 0.601087%.
+- [2026 Tax Levy By-law 133-2026](https://www.toronto.ca/legdocs/bylaws/2026/law0133.pdf). Municipal residential end rate, Column 5: 0.614311%.
 - [Toronto: Have Your Say](https://www.toronto.ca/city-government/council/council-committee-meetings/have-your-say/). Confirm deadlines here and on the item notice; do not infer them.
 - [Toronto open data licence](https://open.toronto.ca/open-data-licence/). Confirm applicable conditions/attribution before deployment.
 

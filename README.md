@@ -4,7 +4,7 @@
 
 CivicClear gives residents a plain-language summary of **what was proposed**, **which decision-making body actually acted**, **which wards appear in the record**, **what is and is not known about participation**, and **the text supporting each claim**.
 
-> **Project state:** Runnable source-linked demo with four curated Toronto agenda examples and an optional, password-gated Claude API analyser. The four static examples were drafted from official agenda excerpts and verified for quote matching; they have **not** received a second independent human sign-off. There is no live deployment URL yet. Live API calls have **not** been tested in this environment.
+> **Project state:** Runnable source-linked demo with four curated Toronto agenda examples and an optional, password-gated Claude API analyser. The four static examples were drafted from official agenda excerpts and verified for quote matching; they have **not** received a second independent human sign-off. Live Streamlit demo: **https://civicclear-2026.onrender.com/** (Render Free Plan). Live API calls have **not** been tested in this environment.
 
 ## Why this exists
 
@@ -16,7 +16,7 @@ A statement like “received for information” may sound like approval to a res
 
 - **Council Decoder:** Staff recommendation → committee action → City Council decision, with verbatim evidence.
 - **Ward filter:** Match an agenda item's listed ward(s) to a user-selected ward; citywide items apply to all.
-- **Have Your Say:** Never infer a comment deadline from the meeting date; links to official procedures and item history.
+- **Have Your Say:** Never infer a comment deadline from a meeting date. For PH29.2, a *separate current City consultation portal* confirms an interactive feedback map through **November 30, 2026**; the app auto-stops advertising it as open afterward. Other items do not claim unverified open windows.
 - **Before & After:** A residential **municipal** property tax estimate comparing 2025 and 2026 at a *constant* MPAC assessed value. Education tax is excluded.
 - **Evidence and uncertainty:** Expand the original quote and source link for every example explanation, and see important unknowns.
 - **Optional admin analysis:** With an Anthropic key and admin password, paste official Toronto agenda text and an optional staff-report PDF for two separate AI passes: structured extraction and cited explanation.
@@ -26,7 +26,7 @@ A statement like “received for information” may sound like approval to a res
 | Toronto agenda item | Official stage | What it illustrates |
 | --- | --- | --- |
 | [2026.DM41.4](https://secure.toronto.ca/council/agenda-item.do?item=2026.DM41.4) | Council received for information | A motion **was not approved** merely by being received |
-| [2026.PH29.2](https://secure.toronto.ca/council/agenda-item.do?item=2026.PH29.2) | Committee adopted with amendments | Directions to consult ≠ confirmed current consultation or final Council adoption |
+| [2026.PH29.2](https://secure.toronto.ca/council/agenda-item.do?item=2026.PH29.2) | Committee adopted with amendments | Official [project feedback map](https://haveyoursay.toronto.ca/LJOV-Planning-Framework-CHRA) is advertised open through Nov. 30, 2026; still no final Council framework adoption |
 | [2026.PH29.1](https://secure.toronto.ca/council/agenda-item.do?item=2026.PH29.1) | Council adopted without amendments | Separate staff, committee and Council stages |
 | [2026.CC38.1](https://secure.toronto.ca/council/agenda-item.do?item=2026.CC38.1) | Council adopted with amendments | Source-based municipal tax calculation |
 
@@ -105,7 +105,7 @@ Key design choices: (1) structured JSON and document citations require separate 
 
 ## Deployment
 
-Push this folder to a **public GitHub repository** after checking secrets are excluded. In [Streamlit Community Cloud](https://docs.streamlit.io/deploy/streamlit-community-cloud), create an app with `app.py` as the entrypoint and Python 3.12. Configure Secrets only if you want to enable admin analysis. Check both desktop and mobile views and wake the free instance before judging. A public deployed URL is optional according to Devpost, but a repository, 2–3 minute demo and one-page report are required.
+This repository is already public at https://github.com/zxding2007/civicclear-2026 and deployed as a Python Streamlit service on Render Free Plan at https://civicclear-2026.onrender.com/. In [Streamlit Community Cloud](https://docs.streamlit.io/deploy/streamlit-community-cloud), create an app with `app.py` as the entrypoint and Python 3.12. Configure Secrets only if you want to enable admin analysis. Check both desktop and mobile views and wake the free instance before judging. A public deployed URL is optional according to Devpost, but a repository, 2–3 minute demo and one-page report are required.
 
 ## Deliverables
 
@@ -117,6 +117,7 @@ Push this folder to a **public GitHub repository** after checking secrets are ex
 - [Checkpoint messages and Devpost draft](docs/checkpoints_and_devpost.md)
 - [Demo video script](docs/demo_video_script.md)
 - [Accuracy / verification matrix](docs/accuracy_matrix.md)
+- [Independent official-source cross-check](docs/official_source_audit_2026-11-12.md)
 - [Team sprint roles](docs/team_roles.md)
 - [Operator / manual validation checklist](docs/operator_checklist.md)
 

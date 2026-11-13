@@ -97,8 +97,13 @@ def test_curated_cases_against_source_excerpt(item_id,expected):
     assert all(verified['stages'])
     assert overall_status(card, verified['stages']) == expected == golden['expected_status']
     assert card.wards == golden['wards']
-    assert card.participation.deadline_text is None
-    assert golden['deadline_stated'] is False
+    assert (card.participation.deadline_text is not None) == golden['deadline_stated']
+    if item_id == '2026.PH29.2':
+        assert verified['participation'] is True
+        assert card.participation.can_still_comment == 'yes'
+        assert 'November 30, 2026' in card.participation.deadline_text
+    else:
+        assert card.participation.can_still_comment == 'not_stated'
 
 
 def test_explanation_citations_verified():
@@ -106,3 +111,16 @@ def test_explanation_citations_verified():
              {'cited_text':'fabricated words'}]}]
     checked = verify_explanation_segments(parts,'Council received item.')
     assert [v['verified'] for v in checked[0]['sources']] == [True, False]
+
+
+def test_current_project_engagement_separate_from_committee_decision():
+    folder = ROOT / 'data' / 'items' / '2026.PH29.2'
+    record = json.loads((folder / 'card.json').read_text(encoding='utf-8'))
+    meta = json.loads((folder / 'meta.json').read_text(encoding='utf-8'))
+    card = DecisionCard.model_validate(record['card'])
+    excerpts = (folder / 'item_page.txt').read_text(encoding='utf-8')
+    verified = verify_card(card, excerpts)
+    assert overall_status(card, verified['stages']) == 'committee_only'
+    assert verified['participation'] is True
+    assert meta['participation_end_date'] == '2026-11-30'
+    assert meta['participation_source_url'].startswith('https://haveyoursay.toronto.ca/')
