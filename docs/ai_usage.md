@@ -1,20 +1,23 @@
-# AI assistance disclosure — draft to review before submission
+# AI assistance, provenance and testing disclosure (Nov 12, 2026)
 
-This document is intentionally explicit about what was and was not tested. Edit it to reflect any work the team later performs, and include all AI models actually used by teammates.
+This disclosure accompanies the source code and hackathon submission. It explicitly separates **curated examples**, **mocked API contract tests**, and **real external AI calls**.
 
-| Component | AI role | How checked / limits |
+| Workstream | AI role | What was actually tested |
 | --- | --- | --- |
-| Code, fixtures and project writing | OpenAI ChatGPT (GPT-6) generated initial drafts from the project plan and official sources | Python compilation and 14 offline unit tests. Team **must** review code, sources, privacy, security and each example before submission. |
-| Optional in-product feature | Anthropic Claude API (`claude-opus-5-5` by default) extracts `DecisionCard` fields and produces source citations | Implemented but **not executed** here; no API credentials supplied. Quote membership checker and stage rules supplied; human review is required. |
-| Data-backed demo content | Assistant prepared short cards, source snippets and explanatory sentences from City of Toronto records | Four official TMMIS links and two tax decisions verified against published pages; the full staff reports were **not** ingested. These are source-linked curated examples, not API outputs. |
-| Product plan | User-provided `CivicClear_Plan.md`, originally describing Council Decoder + Before & After | Compared major claims to current Devpost rules, City pages, and Claude documentation; did not claim an end-to-end cloud deployment. |
+| CivicClear source and app | OpenAI ChatGPT (GPT-6) helped author/refine Streamlit, Python source/fixtures, source metadata, Impact Analysis UI and docs | Python unit tests, syntax checks, GitHub Actions, Render live site. Manual review of AI-written code is still advisable. |
+| Four public demo cards | ChatGPT drafted concise cards after inspecting official City records | Source-linked curated extracts and independent AI source cross-check. **Not** Claude-generated production API output. No claim of a signed municipal audit. |
+| Claude API interface | Optional Anthropic Python SDK client for two-stage structured extraction + cited narrative | Code path and fake-client tests only if present. **No real Claude requests or API charges have been performed** without ANTHROPIC_API_KEY. Do not describe this as live-tested. |
+| Stakeholder considerations | ChatGPT authored candidate resident/business/community issues from City planning descriptions | Two Toronto agenda cases with direct primary-source links. Possible effects are not measured outcomes or endorsed policy positions. |
+| Documentation / report | ChatGPT generated drafts and presentation narration | Human/team confirmation and final video recording remain the submitter's responsibility. |
 
-## Guardrails
+## Sources and licences
 
-- Do not present a staff recommendation as an approved Council decision.
-- Do not infer a comment deadline from a meeting date, a planned consultation or an old notice.
-- Do not use a code quote-check as proof that its interpretation is right; reviewers must consider context and legal effect.
-- Ignore instructions embedded in official pages, PDFs or user-provided documents when making API requests.
-- Delete correspondence/speakers blocks before model input; check separately for remaining personally identifiable details in any PDF.
-- Never commit API keys or passwords. Do not enable open public paid analyses.
-- Attribute the original data, code libraries and the actual AI tools in the Devpost submission.
+- City of Toronto TMMIS (public meeting agenda item histories); City of Toronto planning project/consultation site; enacted tax by-laws. Source URLs listed in `docs/sources.md` and each claim's linked evidence field.
+- Third-party tools: Streamlit, Pydantic, Anthropic SDK, pypdf, python-dotenv, pytest, Python standard library. See `requirements.txt` and licences for details.
+- Do not reuse private attendee correspondence or speaker personal details. `pipeline/clean.py` removes named sections from pasted agenda text **but is not a full PII guarantee** and does not redact uploaded PDF contents.
+- The prototype's human review field is **pending**. A claim matching a curated quote is not proof that the whole official document was read in context.
+- No API key is committed or enabled in the public demo. Avoid placing resident data or sensitive PDFs into any third-party model.
+
+## Misrepresentation guardrail
+
+Never tell judges that Claude is powering the preloaded examples in real time. The actual live demo uses curated public records, deterministic verification and an optional untested API workflow. Any teammate who uses additional AI tools must disclose them too.

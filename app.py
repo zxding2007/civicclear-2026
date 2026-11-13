@@ -15,6 +15,7 @@ from pipeline.clean import strip_personal_sections
 from pipeline.verify import verify_card, verify_explanation_segments
 from pipeline.schema import DecisionCard
 from pipeline.status import overall_status, LABELS
+from pipeline.evidence import read_evidence
 
 ROOT = Path(__file__).resolve().parent
 ITEMS = ROOT / 'data' / 'items'
@@ -67,10 +68,42 @@ def _source_link(url: str, label: str = 'Open official record'):
         st.markdown(f'[{label}]({url})')
 
 
+def _evidence_panel(record: dict | None, field: str):
+    if not record:
+        return
+    evidence = record.get('claims', {}).get(field)
+    if not evidence:
+        return
+    with st.expander('Source for this claim · ' + field.replace('_', ' ').title()):
+        st.write('Official excerpt: “' + evidence['excerpt'] + '”')
+        st.caption(evidence['note'])
+        _source_link(evidence['source_url'], evidence['source_name'])
+        st.caption('A linked excerpt supports context, but not every inference. Check the complete official source.')
+
+
+def _impact_section(record: dict | None):
+    if record is None:
+        return
+    st.markdown('### Who is affected & how?')
+    st.caption('Stakeholder considerations, NOT measured impacts or promises. This section distinguishes official priorities from potential questions.')
+    for stakeholder in record['impacts']:
+        with st.container(border=True):
+            st.markdown('**' + stakeholder['audience'] + '**')
+            st.write('Officially documented priority: ' + stakeholder['grounded_priority'])
+            st.write('Possible effect (not a confirmed outcome): ' + stakeholder['potential_effect'])
+            st.markdown('**Question to consider:** ' + stakeholder['question'])
+            _evidence_panel(record, stakeholder['claim_ref'])
+    with st.expander('Trade-offs and uncertainties'):
+        for caveat in record.get('tradeoffs', []):
+            st.markdown('- ' + caveat)
+
+
 def _show_card(card: DecisionCard, status: str, verified: dict, explanation: list[dict], meta: dict, selected_ward: str):
+    record = read_evidence(ROOT / 'data' / 'evidence_impact.json', card.item_id)
     st.subheader(card.title)
     st.caption('Agenda item ' + card.item_id + ' · Source review: ' + meta.get('source_checked_on', 'unknown'))
     _status_box(status)
+    _evidence_panel(record, 'status')
     if meta.get('human_review', 'pending') != 'complete':
         st.caption('Source-linked demonstration. Independent team review is still required before municipal deployment.')
     if meta.get('source_mode') == 'curated_public_excerpts':
@@ -90,11 +123,15 @@ def _show_card(card: DecisionCard, status: str, verified: dict, explanation: lis
     with st.container(border=True):
         st.markdown('**What is proposed?**')
         st.write(card.what_is_proposed)
+        _evidence_panel(record, 'what_is_proposed')
         st.markdown('**Why?**')
         st.write(card.why)
+        _evidence_panel(record, 'why')
         st.markdown('**Who may be affected?**')
         st.write(card.who_is_affected)
+        _evidence_panel(record, 'who_is_affected')
 
+    _impact_section(record)
     st.markdown('### Decision timeline')
     stages = card.stages
     columns = st.columns(3)
@@ -147,8 +184,7 @@ def _show_card(card: DecisionCard, status: str, verified: dict, explanation: lis
 
     st.markdown('### Have Your Say')
     part = card.participation
-    # Historical meeting decisions and current project engagement are distinct.
-    # Do not continue advertising a dated opportunity as open after its stated end date.
+    # Current project engagement is not the historical committee decision.
     feedback_end = meta.get('participation_end_date')
     feedback_expired = bool(feedback_end and date.today() > date.fromisoformat(feedback_end))
     if part.can_still_comment == 'yes' and verified.get('participation') and not feedback_expired:
@@ -161,6 +197,7 @@ def _show_card(card: DecisionCard, status: str, verified: dict, explanation: lis
         st.warning('A currently open comment period or deadline has **not been verified** for this item. Do not infer a deadline from the council meeting date.')
     if part.deadline_text and verified.get('participation'):
         st.write('Official stated deadline: ' + part.deadline_text)
+    _evidence_panel(record, 'participation')
     if part.how and verified.get('participation'):
         st.write('Method: ' + part.how)
     st.markdown(f'[Toronto: Have Your Say — participation instructions]({HAVE_YOUR_SAY})')
@@ -173,6 +210,7 @@ def _show_card(card: DecisionCard, status: str, verified: dict, explanation: lis
     st.markdown('### Important conditions and uncertainties')
     for line in card.conditions:
         st.markdown('- **Condition:** ' + line)
+    _evidence_panel(record, 'conditions')
     for line in card.uncertainties:
         st.markdown('- **Uncertainty:** ' + line)
 

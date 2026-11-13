@@ -16,6 +16,7 @@ A statement like “received for information” may sound like approval to a res
 
 - **Council Decoder:** Staff recommendation → committee action → City Council decision, with verbatim evidence.
 - **Ward filter:** Match an agenda item's listed ward(s) to a user-selected ward; citywide items apply to all.
+- **Claim-level source panels and stakeholder impacts:** Two core planning cases distinguish official priorities from possible consequences and questions for residents, businesses and community organizations. No quantified effects are inferred.
 - **Have Your Say:** Never infer a comment deadline from a meeting date. For PH29.2, a *separate current City consultation portal* confirms an interactive feedback map through **November 30, 2026**; the app auto-stops advertising it as open afterward. Other items do not claim unverified open windows.
 - **Before & After:** A residential **municipal** property tax estimate comparing 2025 and 2026 at a *constant* MPAC assessed value. Education tax is excluded.
 - **Evidence and uncertainty:** Expand the original quote and source link for every example explanation, and see important unknowns.
@@ -68,7 +69,7 @@ python -m pytest -q
 python -m compileall -q app.py pipeline calculator.py build_cache.py
 ```
 
-Local initial result on 2026-11-12: **14 passed**, using bundled public-source excerpts. These tests do **not** imply full PDFs have been parsed or paid API calls have been verified.
+Local initial result on 2026-11-12: **25 passed**, using bundled public-source excerpts. These tests do **not** imply full PDFs have been parsed or paid API calls have been verified.
 
 ## Architecture and data flow
 
@@ -97,7 +98,7 @@ Key design choices: (1) structured JSON and document citations require separate 
 | Structured data | `DecisionCard` Pydantic model | Try real paid API calls |
 | Source check | Verbatim quote membership in provided text or extracted PDF text | Human comparison with original authoritative documents; normalized membership does **not** establish context |
 | Stage rule | `overall_status`, council precedence | Expand coverage for unusual Toronto procedural outcomes |
-| Golden examples | Four `golden.json` expected outcomes, 14 local tests | Independent human sign-off, cross-check full report PDFs |
+| Golden examples | Four `golden.json` expected outcomes, 25 automated tests (including fake-SDK contract checks) | Independent human sign-off, cross-check full report PDFs |
 | Privacy | Removes `Communications` / `Speakers` text sections | Not a substitute for comprehensive personal-data review, access controls or municipal privacy assessment |
 | Engagement | Absent verified current deadline → "not verified" | Manually verify current notices and participation windows |
 
@@ -113,6 +114,8 @@ This repository is already public at https://github.com/zxding2007/civicclear-20
 - [Municipal Readiness Report (editable Markdown)](docs/readiness_report.md)
 - [UML diagrams](docs/uml.md)
 - [AI disclosure](docs/ai_usage.md)
+- [Live AI smoke test status (no real API key)](docs/live_ai_smoke_test.md)
+- [Video recording and Devpost final checklist](docs/recording_and_submission_steps.md)
 - [Data and library credits](docs/sources.md)
 - [Checkpoint messages and Devpost draft](docs/checkpoints_and_devpost.md)
 - [Demo video script](docs/demo_video_script.md)
