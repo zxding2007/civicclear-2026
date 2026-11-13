@@ -1,0 +1,24 @@
+[
+  {
+    "text": "City Council adopted the budget implementation item with amendments on February 10, 2026.",
+    "sources": [
+      {
+        "document": "City of Toronto agenda item",
+        "cited_text": "City Council adopted this item on February 10, 2026 with amendments.",
+        "page": null,
+        "url": "https://secure.toronto.ca/council/agenda-item.do?item=2026.CC38.1"
+      }
+    ]
+  },
+  {
+    "text": "The 2026 residential municipal tax rate, including City Building Fund and excluding education tax, is 0.614311%.",
+    "sources": [
+      {
+        "document": "City of Toronto agenda item",
+        "cited_text": "Residential 0.601087% 0.004208% 0.605295% 0.009016% 0.614311%",
+        "page": null,
+        "url": "https://secure.toronto.ca/council/agenda-item.do?item=2026.CC38.1"
+      }
+    ]
+  }
+]

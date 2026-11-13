@@ -1,0 +1,24 @@
+[
+  {
+    "text": "City Council received the Cummer Station motion for information; receiving it is not project approval.",
+    "sources": [
+      {
+        "document": "City of Toronto agenda item",
+        "cited_text": "City Council on May 20 and 21, 2026, received Item DM41.4 for information.",
+        "page": null,
+        "url": "https://secure.toronto.ca/council/agenda-item.do?item=2026.DM41.4"
+      }
+    ]
+  },
+  {
+    "text": "The official tracking status says there will be no further action on this item.",
+    "sources": [
+      {
+        "document": "City of Toronto agenda item",
+        "cited_text": "No further action will be taken on this item.",
+        "page": null,
+        "url": "https://secure.toronto.ca/council/agenda-item.do?item=2026.DM41.4"
+      }
+    ]
+  }
+]

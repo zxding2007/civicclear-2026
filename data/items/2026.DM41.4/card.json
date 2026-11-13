@@ -1,0 +1,53 @@
+{
+  "card": {
+    "item_id": "2026.DM41.4",
+    "title": "Reinstate Cummer Station for North York Centre",
+    "wards": [
+      "18 - Willowdale"
+    ],
+    "what_is_proposed": "A councillor brought forward a motion about reinstating Cummer Station for North York Centre.",
+    "why": "The motion concerned a proposed transit station serving North York Centre; the agenda page does not establish approval or funding.",
+    "who_is_affected": "Potential transit riders and people in Ward 18 (Willowdale). No station reinstatement was approved by this item.",
+    "stages": [
+      {
+        "body": "City Council",
+        "date": "2026-05-20/21",
+        "stage_type": "council_decision",
+        "outcome": "received_for_information",
+        "quote": "City Council on May 20 and 21, 2026, received Item DM41.4 for information."
+      }
+    ],
+    "conditions": [
+      "The tracking status states no further action will be taken on this item."
+    ],
+    "participation": {
+      "can_still_comment": "not_stated",
+      "deadline_text": null,
+      "how": null,
+      "quote": null
+    },
+    "procedural_phrases": [
+      {
+        "phrase": "received for information",
+        "meaning_here": "Council formally noted the item; it did not approve the station project.",
+        "quote": "received Item DM41.4 for information."
+      }
+    ],
+    "uncertainties": [
+      "No new meeting or consultation deadline is stated on the item page."
+    ]
+  },
+  "verification": {
+    "stages": [
+      true
+    ],
+    "phrases": [
+      true
+    ],
+    "participation": null
+  },
+  "status": "received",
+  "generation_mode": "curated_demo_not_llm",
+  "generated_at": "2026-11-12",
+  "model": null
+}

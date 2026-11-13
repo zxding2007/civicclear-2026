@@ -1,0 +1,12 @@
+{
+  "received for information": "The body has acknowledged/reviewed the item. This does not itself approve the proposed project.",
+  "adopted": "The specified decision-making body approved the item; check whether it was a committee or City Council.",
+  "adopted with amendments": "The body adopted an amended version. The amendment text matters.",
+  "adopted without amendments": "The body adopted the version presented at that stage without changing it.",
+  "referred": "The item was sent to another body or person for further review or action.",
+  "deferred": "The decision was delayed, rather than decided at that meeting.",
+  "staff recommendation": "A proposal from municipal staff, not a decision of the committee or Council.",
+  "committee decision": "An action taken by a committee, which is not automatically final City Council approval.",
+  "statutory public meeting": "A meeting required by applicable legislation; check the official notice for participation rules.",
+  "ward": "A geographic electoral division of Toronto. A citywide item may affect all wards."
+}

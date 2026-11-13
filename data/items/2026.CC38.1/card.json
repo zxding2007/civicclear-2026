@@ -1,0 +1,54 @@
+{
+  "card": {
+    "item_id": "2026.CC38.1",
+    "title": "2026 Budget Implementation and Property Tax Rates",
+    "wards": [
+      "All"
+    ],
+    "what_is_proposed": "Implement 2026 municipal property tax rates, fees and related budget measures.",
+    "why": "To fund municipal programs and capital priorities through property-tax and fee measures.",
+    "who_is_affected": "Toronto property owners across all wards; this calculator is only for the residential class.",
+    "stages": [
+      {
+        "body": "City Council",
+        "date": "2026-02-10",
+        "stage_type": "council_decision",
+        "outcome": "adopted_with_amendments",
+        "quote": "City Council adopted this item on February 10, 2026 with amendments."
+      }
+    ],
+    "conditions": [
+      "Residential municipal rate is 0.614311% including City Building Fund and excluding education tax.",
+      "The demonstration assumes the same assessed value for both comparison years."
+    ],
+    "participation": {
+      "can_still_comment": "not_stated",
+      "deadline_text": null,
+      "how": null,
+      "quote": null
+    },
+    "procedural_phrases": [
+      {
+        "phrase": "adopted with amendments",
+        "meaning_here": "City Council adopted the budget implementation item after changes; use the enacted rate, not a preliminary recommendation.",
+        "quote": "adopted this item on February 10, 2026 with amendments."
+      }
+    ],
+    "uncertainties": [
+      "Actual bills may differ due to assessments, property tax classes, credits or other factors."
+    ]
+  },
+  "verification": {
+    "stages": [
+      true
+    ],
+    "phrases": [
+      true
+    ],
+    "participation": null
+  },
+  "status": "final_amended",
+  "generation_mode": "curated_demo_not_llm",
+  "generated_at": "2026-11-12",
+  "model": null
+}

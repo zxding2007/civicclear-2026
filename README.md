@@ -1,1 +1,125 @@
-# civicclear-2026
+# CivicClear — City Decisions, Decoded
+
+**CIVIC Hack 2026 prototype · City of Toronto · Source-linked decision explainers**
+
+CivicClear gives residents a plain-language summary of **what was proposed**, **which decision-making body actually acted**, **which wards appear in the record**, **what is and is not known about participation**, and **the text supporting each claim**.
+
+> **Project state:** Runnable source-linked demo with four curated Toronto agenda examples and an optional, password-gated Claude API analyser. The four static examples were drafted from official agenda excerpts and verified for quote matching; they have **not** received a second independent human sign-off. There is no live deployment URL yet. Live API calls have **not** been tested in this environment.
+
+## Why this exists
+
+A statement like “received for information” may sound like approval to a resident. Conversely, a committee's amended decision may not be final Council approval. CivicClear uses a **three-stage decision timeline** instead of collapsing all official language into a yes/no verdict.
+
+**Primary users:** Toronto residents; potential institutional users include council offices, clerks, public engagement and communications teams.
+
+## Features
+
+- **Council Decoder:** Staff recommendation → committee action → City Council decision, with verbatim evidence.
+- **Ward filter:** Match an agenda item's listed ward(s) to a user-selected ward; citywide items apply to all.
+- **Have Your Say:** Never infer a comment deadline from the meeting date; links to official procedures and item history.
+- **Before & After:** A residential **municipal** property tax estimate comparing 2025 and 2026 at a *constant* MPAC assessed value. Education tax is excluded.
+- **Evidence and uncertainty:** Expand the original quote and source link for every example explanation, and see important unknowns.
+- **Optional admin analysis:** With an Anthropic key and admin password, paste official Toronto agenda text and an optional staff-report PDF for two separate AI passes: structured extraction and cited explanation.
+
+### Four example items
+
+| Toronto agenda item | Official stage | What it illustrates |
+| --- | --- | --- |
+| [2026.DM41.4](https://secure.toronto.ca/council/agenda-item.do?item=2026.DM41.4) | Council received for information | A motion **was not approved** merely by being received |
+| [2026.PH29.2](https://secure.toronto.ca/council/agenda-item.do?item=2026.PH29.2) | Committee adopted with amendments | Directions to consult ≠ confirmed current consultation or final Council adoption |
+| [2026.PH29.1](https://secure.toronto.ca/council/agenda-item.do?item=2026.PH29.1) | Council adopted without amendments | Separate staff, committee and Council stages |
+| [2026.CC38.1](https://secure.toronto.ca/council/agenda-item.do?item=2026.CC38.1) | Council adopted with amendments | Source-based municipal tax calculation |
+
+The example `item_page.txt` files intentionally contain **selected, non-personal excerpts**, not full scraped pages. The source links lead to the entire official record. A complete source excerpt and any uploaded staff report should be manually inspected by the team before publishing any automatically generated card.
+
+## Run locally
+
+Use Python 3.12:
+
+```bash
+python -m venv .venv
+# macOS/Linux:
+source .venv/bin/activate
+# Windows PowerShell:
+# .venv\Scripts\Activate.ps1
+python -m pip install -r requirements.txt
+streamlit run app.py
+```
+
+The four preloaded items and tax calculator work **without any API key**.
+
+Optional, local admin analysis:
+
+```bash
+cp .env.example .env
+# Fill in the .env values with your own secrets; never commit .env
+# On macOS/Linux: set -a; source .env; set +a
+streamlit run app.py
+```
+
+For Windows PowerShell, set the three environment variables in that shell, or use Streamlit `.streamlit/secrets.toml` locally. Streamlit Community Cloud secrets are entered in the app's Settings / Secrets dialog; **do not commit secrets**. No external LLM call occurs until an administrator opens and uses the protected page.
+
+To generate a cache for a new item by CLI: prepare `data/items/<ID>/item_page.txt`, `meta.json`, and optionally `report.pdf`; run `python build_cache.py --item <ID>` with `ANTHROPIC_API_KEY` set. `--force` is required to replace existing curated cards, and generated output is labelled **AI unreviewed**.
+
+## Test
+
+```bash
+python -m pytest -q
+python -m compileall -q app.py pipeline calculator.py build_cache.py
+```
+
+Local initial result on 2026-11-12: **14 passed**, using bundled public-source excerpts. These tests do **not** imply full PDFs have been parsed or paid API calls have been verified.
+
+## Architecture and data flow
+
+```mermaid
+flowchart LR
+    A[Official agenda page pasted by admin] --> R[Remove Communications / Speakers]
+    R --> X[Claude structured extraction]
+    P[Official staff report PDF - optional] --> X
+    P --> E[Claude cited explanation]
+    R --> E
+    X --> V[Check model quotes exist in uploaded sources]
+    V --> S[Code-determined decision status]
+    S --> C[(Cached JSON / admin preview)]
+    E --> C
+    D[(Four curated source-linked demo records)] --> U[Streamlit UI]
+    C --> U
+    T[2025/2026 official municipal rates] --> U
+```
+
+Key design choices: (1) structured JSON and document citations require separate API requests; (2) verified stages drive decision status in code, not model sentiment; (3) unknown participation stays unknown; (4) defaults use prebuilt files so an unprotected public page never incurs API cost. See [`docs/uml.md`](docs/uml.md).
+
+## Accuracy checks and limitations
+
+| Control | Implementation / verification | Remaining work |
+| --- | --- | --- |
+| Structured data | `DecisionCard` Pydantic model | Try real paid API calls |
+| Source check | Verbatim quote membership in provided text or extracted PDF text | Human comparison with original authoritative documents; normalized membership does **not** establish context |
+| Stage rule | `overall_status`, council precedence | Expand coverage for unusual Toronto procedural outcomes |
+| Golden examples | Four `golden.json` expected outcomes, 14 local tests | Independent human sign-off, cross-check full report PDFs |
+| Privacy | Removes `Communications` / `Speakers` text sections | Not a substitute for comprehensive personal-data review, access controls or municipal privacy assessment |
+| Engagement | Absent verified current deadline → "not verified" | Manually verify current notices and participation windows |
+
+**Important:** The demo's ward matching is based on a ward *listed in the official item*, not a geocoded impact assessment. The calculator compares municipal taxes at a constant assessed value; it does not predict an actual person's 2025–2026 bills. This is not legal or tax advice. Live model-generated summaries must be reviewed before public use.
+
+## Deployment
+
+Push this folder to a **public GitHub repository** after checking secrets are excluded. In [Streamlit Community Cloud](https://docs.streamlit.io/deploy/streamlit-community-cloud), create an app with `app.py` as the entrypoint and Python 3.12. Configure Secrets only if you want to enable admin analysis. Check both desktop and mobile views and wake the free instance before judging. A public deployed URL is optional according to Devpost, but a repository, 2–3 minute demo and one-page report are required.
+
+## Deliverables
+
+- [Municipal Readiness Report (PDF)](docs/readiness_report.pdf)
+- [Municipal Readiness Report (editable Markdown)](docs/readiness_report.md)
+- [UML diagrams](docs/uml.md)
+- [AI disclosure](docs/ai_usage.md)
+- [Data and library credits](docs/sources.md)
+- [Checkpoint messages and Devpost draft](docs/checkpoints_and_devpost.md)
+- [Demo video script](docs/demo_video_script.md)
+- [Accuracy / verification matrix](docs/accuracy_matrix.md)
+- [Team sprint roles](docs/team_roles.md)
+- [Operator / manual validation checklist](docs/operator_checklist.md)
+
+## Credits and licence
+
+Open-source Python libraries: Streamlit, Pydantic, Anthropic SDK, pypdf, python-dotenv and pytest. Records and tax rates originate from official City of Toronto pages (consult current municipal usage terms). AI assistance in code and writing is declared in [`docs/ai_usage.md`](docs/ai_usage.md). Prototype source code is supplied under the MIT licence; third-party content retains its own terms.

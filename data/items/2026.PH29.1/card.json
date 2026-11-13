@@ -1,0 +1,69 @@
+{
+  "card": {
+    "item_id": "2026.PH29.1",
+    "title": "McCleary District Meanwhile Uses — Lake Shore Boulevard East",
+    "wards": [
+      "14 - Toronto - Danforth"
+    ],
+    "what_is_proposed": "Allow temporary non-residential meanwhile uses at specified McCleary District sites through amendments to the Official Plan and zoning by-law.",
+    "why": "To use vacant or underused buildings and land for activities before long-term redevelopment.",
+    "who_is_affected": "People and organizations near the five identified sites in Ward 14 (Toronto–Danforth).",
+    "stages": [
+      {
+        "body": "City Planning / Development Review staff",
+        "date": "2026-03-30",
+        "stage_type": "staff_recommendation",
+        "outcome": "recommended",
+        "quote": "This report reviews and recommends approval"
+      },
+      {
+        "body": "Planning and Housing Committee",
+        "date": "2026-04-14",
+        "stage_type": "committee_decision",
+        "outcome": "adopted",
+        "quote": "adopted without amendment."
+      },
+      {
+        "body": "City Council",
+        "date": "2026-04-22/23",
+        "stage_type": "council_decision",
+        "outcome": "adopted",
+        "quote": "City Council adopted this item on April 22 and 23, 2026 without amendments."
+      }
+    ],
+    "conditions": [
+      "The Council decision includes provisions relating to required provincial approvals and natural-hazard protocols before by-laws are enacted, if applicable."
+    ],
+    "participation": {
+      "can_still_comment": "not_stated",
+      "deadline_text": null,
+      "how": null,
+      "quote": null
+    },
+    "procedural_phrases": [
+      {
+        "phrase": "adopted without amendments",
+        "meaning_here": "City Council adopted the item without changing the committee-recommended text at that stage.",
+        "quote": "adopted this item on April 22 and 23, 2026 without amendments."
+      }
+    ],
+    "uncertainties": [
+      "The item does not establish a currently open public comment period; the statutory public meeting was April 14, 2026."
+    ]
+  },
+  "verification": {
+    "stages": [
+      true,
+      true,
+      true
+    ],
+    "phrases": [
+      true
+    ],
+    "participation": null
+  },
+  "status": "final_adopted",
+  "generation_mode": "curated_demo_not_llm",
+  "generated_at": "2026-11-12",
+  "model": null
+}

@@ -1,0 +1,58 @@
+{
+  "card": {
+    "item_id": "2026.PH29.2",
+    "title": "Little Jamaica and Oakwood Vaughan Planning Framework",
+    "wards": [
+      "5 - York South - Weston",
+      "8 - Eglinton - Lawrence",
+      "9 - Davenport",
+      "12 - Toronto - St. Paul's"
+    ],
+    "what_is_proposed": "A draft planning framework sets out how future development may relate to local culture, community priorities and the public realm.",
+    "why": "The draft is intended as a basis for community and stakeholder consultation before final recommendations.",
+    "who_is_affected": "People and organizations in the four wards listed for Little Jamaica and Oakwood Vaughan.",
+    "stages": [
+      {
+        "body": "Planning and Housing Committee",
+        "date": "2026-04-14",
+        "stage_type": "committee_decision",
+        "outcome": "adopted_with_amendments",
+        "quote": "This item was considered by Planning and Housing Committee on April 14, 2026 and was adopted with amendments."
+      }
+    ],
+    "conditions": [
+      "Committee requested community and stakeholder consultations and a final report in Q4 2026.",
+      "Committee requested a stakeholder advisory committee. These requests do not confirm an active consultation today."
+    ],
+    "participation": {
+      "can_still_comment": "not_stated",
+      "deadline_text": null,
+      "how": null,
+      "quote": null
+    },
+    "procedural_phrases": [
+      {
+        "phrase": "adopted with amendments",
+        "meaning_here": "The committee approved its own amended directions; this is not evidence of final Council adoption of the planning framework.",
+        "quote": "adopted with amendments."
+      }
+    ],
+    "uncertainties": [
+      "The item does not confirm that public registration is currently open or provide a verified current deadline.",
+      "The requested Q4 2026 report-back is a planned next step, not an established final outcome."
+    ]
+  },
+  "verification": {
+    "stages": [
+      true
+    ],
+    "phrases": [
+      true
+    ],
+    "participation": null
+  },
+  "status": "committee_only",
+  "generation_mode": "curated_demo_not_llm",
+  "generated_at": "2026-11-12",
+  "model": null
+}
