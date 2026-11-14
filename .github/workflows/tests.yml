@@ -1,4 +1,4 @@
-name: Python tests
+name: Application checks
 
 on:
   push:
@@ -12,9 +12,16 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
       - name: Install dependencies
         run: python -m pip install -r requirements.txt
       - name: Run tests
         run: python -m pytest -q
       - name: Check syntax
-        run: python -m compileall -q app.py pipeline calculator.py build_cache.py build_site.py
+        run: python -m compileall -q app.py server.py pipeline calculator.py build_cache.py build_site.py
+      - name: Check frontend syntax
+        run: node --check site/app.js
+      - name: Build pages and decision data
+        run: python build_site.py

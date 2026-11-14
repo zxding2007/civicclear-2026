@@ -1,36 +1,62 @@
-# Operator checklist (required human tasks)
+# Operator checklist — current app and release preparation
 
-## Friday Nov 13 — before 08:00 ET
+**Current checkout:** the redesigned app has six separate pages: Overview, Decisions, Decision details, Tax calculator, Sources & method, and Analyse a record. The latest local suite passed **57 tests**. The redesign and documentation updates are local changes; this checklist does not establish that they have been pushed or deployed.
 
-- [ ] Open `data/items/*/meta.json` item URLs and compare every statement and quote to the **full official** item page.
-- [ ] Read each relevant staff report PDF, review contextual nuance, and add any required conditions.
-- [ ] Confirm all 4 `golden.json` records independently; replace `checked_by` with the reviewing person's identifier and date. Do not merely copy the model output.
-- [ ] Read [Toronto Have Your Say](https://www.toronto.ca/city-government/council/council-committee-meetings/have-your-say/) plus the actual meeting calendar to confirm whether any participation window is open.
-- [ ] Run `python -m pytest -q` and `streamlit run app.py` locally.
-- [ ] Publish a public GitHub repository and preserve legitimate chronological commits; check `.gitignore` before any commits.
-- [ ] Submit Checkpoint 1 in the organizer's requested Discord channel. Location is not established by the plan; use participant announcements.
+The existing public addresses are the [GitHub Pages demo](https://zxding2007.github.io/civicclear-2026/) and the [earlier Render/Streamlit demo](https://civicclear-2026.onrender.com/). They may still show the older interface until the new code is published. Follow [publish_guide.md](publish_guide.md) for deployment; use the same existing repository and checkout.
 
-## Friday Nov 13 — before 15:00 / 18:00 ET
+## Before the next push
 
-- [ ] Post Checkpoint 2 and 3 in the announced organizer channels.
-- [ ] If testing live AI, create API credentials under the team's Anthropic account and a strong admin password. Test 1 item, log total cost, and compare each output with independent source records.
-- [ ] Validate actual API library versions (`pip freeze`); check rate limits, data handling and consent implications for uploads.
-- [ ] Deploy via Streamlit Community Cloud (optional but useful); open the live URL in a private browser session to verify.
-- [ ] Recheck resident-facing copy, citation links, phone screen dimensions, print view and accessibility.
-- [ ] Get teammate review of `docs/readiness_report.pdf` and cite the correct model/cost numbers.
+With Python 3.12 and the project dependencies installed, run from the repository root:
 
-## Saturday Nov 14 — 07:00–09:30 ET
+```bash
+python build_site.py
+python -m pytest -q
+python -m uvicorn server:app --reload
+```
 
-- [ ] Record 2–3 minute **actual working** demo; verify audio and legibility, especially source links.
-- [ ] Copy/update the Devpost draft, with real GitHub URL, optional app URL, video URL and report attachment.
-- [ ] Attach `docs/readiness_report.pdf`; confirm 1 page.
-- [ ] Publish and independently re-open all links; wake the hosted app.
-- [ ] Submit **before 10:00 ET** (hard stop). No code or artifact edits after the official cutoff.
+Open `http://localhost:8000`. The first command regenerates all six HTML pages and the saved decision bundle. The server connects the pages to the existing Python verification pipeline and calculator. The earlier Streamlit interface is still available with `streamlit run app.py`, but it is not the redesigned app.
 
-## Security and accuracy risks to decide before launch
+- [ ] Confirm the local app opens and the navigation loads separate pages.
+- [ ] Confirm Overview, Decisions and saved record details disclose **pre-generated demo data**, no AI calls on browsing, and independent human review pending.
+- [ ] Check all four records and their original evidence. `DM41.4` is received for information, `PH29.2` is committee-only, `PH29.1` is Council-adopted, and `CC38.1` is adopted with amendments.
+- [ ] Select a ward and check the record wording. A match means the official record names the ward or is citywide; a missing ward does not rule out indirect effects.
+- [ ] Open `PH29.2`: verify the advertised **November 30, 2026** feedback deadline and **Give feedback** action against the current [official City portal](https://haveyoursay.toronto.ca/LJOV-Planning-Framework-CHRA). Check the form is still available; do not infer availability from the April meeting date.
+- [ ] Open the separate **Tax calculator** page. CAD 700,000 should show 2025 CAD 4,207.61, 2026 CAD 4,300.18, and CAD 92.57 difference. Confirm the City Building Fund is included, education tax excluded, and both official tax sources are linked.
+- [ ] Clear or invalidate the assessed value and confirm old results disappear. Confirm the currency prefix does not overlap the amount.
+- [ ] Check 375px width, keyboard navigation, visible focus, mobile-menu closing, and reduced-motion behavior.
+- [ ] Check **Analyse a record** stays disabled when credentials are absent. Browsing examples and using the calculator must not call an AI service.
+- [ ] Review `git status` and the intended diff before staging. Exclude credentials, environment folders, caches, and local browser artifacts. Do not create a new repository or rewrite commit history.
 
-- [ ] Review the full PDF for email addresses, correspondents or other citizen identifiers before uploading to an external LLM. A headings-based scrubber of page text does **not** scrub the PDF itself.
-- [ ] Current calendar and comment deadlines were not established by this build. Preserve the explicit uncertainty message unless manually confirmed.
-- [ ] Curated demo source snippets are extracts, **not** official full transcripts.
-- [ ] A quote's presence in a document does not prove the AI interpretation is accurate.
-- [ ] If there is no paid API access, keep the admin page disabled and demonstrate the fully functional source-linked static app.
+## After publishing
+
+- [ ] Confirm the GitHub test and Pages workflows succeed for the intended commit.
+- [ ] Open the public Pages URL and verify the new six-page navigation. Pages uses saved demo data and has no Python analysis endpoint.
+- [ ] If publishing the connected app on Render, confirm its service starts `uvicorn server:app --host 0.0.0.0 --port $PORT`; merely pushing this repository does not establish that an existing Streamlit service has changed its start command.
+- [ ] Open the connected app and check data loading, the Python calculator, and the analysis availability state. Let a sleeping free instance wake before recording.
+- [ ] Update submission links only after verifying what each public address actually serves.
+
+## Human review still required
+
+- [ ] Open the item URLs in `data/items/*/meta.json` and compare every statement and quote with the **full official** item page.
+- [ ] Read the relevant full staff-report PDFs and attachments, including conditions and contextual nuance. The bundled excerpts are not complete transcripts.
+- [ ] Independently confirm all four `golden.json` records. Record the reviewing person's identifier and date only after the review is complete; do not copy a model's output as sign-off.
+- [ ] Recheck current participation notices, including the Little Jamaica portal. Saved dates and passing tests do not prove a live form is open.
+- [ ] Review the one-page readiness report and AI disclosure for consistency with the version being submitted.
+
+## Optional live AI test
+
+The extraction and explanation integration has been tested with mocks, not real paid Claude calls. Keep that distinction in the demo and submission.
+
+- [ ] If the team chooses to test it, configure its own Anthropic key, a strong analyst password, and a valid model in private environment settings. Never commit secrets.
+- [ ] Review uploaded PDFs for personal information first. The page-text headings scrubber does **not** redact PDF content.
+- [ ] Submit one official record, record the actual model and cost, and compare every output and citation with the full source before reuse. An analysis preview is not saved or published automatically.
+- [ ] Preserve human review as pending until a person actually completes it. A quotation match alone does not establish a correct interpretation.
+
+## Event and submission tasks
+
+The original event plan listed Nov 13 checkpoints at 08:00, 15:00 and 18:00 ET, and a Nov 14, 2026 final submission at 10:00 ET. Confirm the organizer's current announcements and rules; this checklist is not evidence that a checkpoint or submission occurred.
+
+- [ ] Check which organizer checkpoints have actually been posted. Historical drafts are labelled in [checkpoints_and_devpost.md](checkpoints_and_devpost.md).
+- [ ] Record and review a 2–3 minute working demo using [demo_video_script.md](demo_video_script.md).
+- [ ] Verify the video, repository, app and report links without being signed in.
+- [ ] Complete the Devpost fields and confirm the submission status, not just a saved draft. Observe the organizer's final cutoff for code and artifact changes.

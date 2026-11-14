@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#191b20">
+  <meta name="description" content="Your workspace for understanding Toronto council decisions, checking the evidence, and finding ways to participate.">
+  <title>Tax calculator · CivicClear</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@400;500;600;700&family=Funnel+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="page.css">
+  <script src="data.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body data-page="calculator">
+  <a class="skip-link" href="#view">Skip to content</a>
+  <button id="nav-scrim" class="nav-scrim" aria-label="Close navigation" hidden></button>
+  <aside id="sidebar" class="sidebar" aria-label="App navigation">
+    <a class="brand" href="index.html" aria-label="CivicClear overview">
+      <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none"><path d="M25 9a12 12 0 1 0 0 14" stroke="currentColor" stroke-width="5"/><path d="m14 15 4 4L29 7" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <span>CivicClear<span class="brand-caption">YOUR CITY, MADE CLEAR</span></span>
+    </a>
+    <div class="workspace-label"><span class="city-avatar" aria-hidden="true">TO</span><div><strong>Toronto</strong><span>Resident workspace</span></div><span class="workspace-dot" aria-hidden="true"></span></div>
+    <p class="nav-label">WORKSPACE</p>
+    <nav class="primary-nav" aria-label="Main">
+      <a href="index.html" data-route="overview"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg><span>Overview</span></a>
+      <a href="decisions.html" data-route="decisions"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9zM14 3v6h6M8 13h8M8 17h5"/></svg><span>Decisions</span><span id="decision-count" class="nav-count">4</span></a>
+      <a href="calculator.html" data-route="calculator"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 7h8M8 12h1m6 0h1m-8 4h1m6 0h1"/></svg><span>Tax calculator</span></a>
+      <a href="sources.html" data-route="sources"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 8 3v6c0 5-8 9-8 9s-8-4-8-9V6zM8 12l3 3 5-6"/></svg><span>Sources &amp; method</span></a>
+    </nav>
+    <p class="nav-label nav-label--tools">ANALYST TOOLS</p>
+    <nav class="primary-nav" aria-label="Analyst">
+      <a href="analyse.html" data-route="analyse"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 2.8 6.2L21 12l-6.2 2.8L12 21l-2.8-6.2L3 12l6.2-2.8z"/></svg><span>Analyse a record</span><svg class="icon nav-lock" viewBox="0 0 24 24" aria-label="Admin access"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg></a>
+    </nav>
+    <button class="drawer-close" id="sidebar-close" type="button">Close menu <span aria-hidden="true">×</span></button>
+    <div class="sidebar-bottom">
+      <div class="sidebar-note"><span class="note-spark" aria-hidden="true">✳</span><strong>Clarity starts with context.</strong><p>Every decision has a story. Follow it back to the original record.</p><a href="sources.html">How we check sources <span aria-hidden="true">↗</span></a></div>
+      <div class="sidebar-footer"><span class="prototype-dot" aria-hidden="true"></span> CIVIC Hack 2026 <span class="prototype-tag">PROTOTYPE</span></div>
+    </div>
+  </aside>
+  <div class="app-body">
+    <header class="topbar">
+      <div class="breadcrumb"><button id="menu-toggle" class="icon-button menu-toggle" type="button" aria-expanded="false" aria-controls="sidebar" aria-label="Open navigation"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button><span class="breadcrumb-home">Workspace</span><span class="breadcrumb-divider" aria-hidden="true">/</span><span id="page-label">Tax calculator</span></div>
+      <div class="topbar-actions"><span id="connection-status" class="connection-status" role="status">Loading records</span><div class="ward-picker"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 6-8 11-8 11S4 16 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg><label class="sr-only" for="ward-select">Your ward</label><select id="ward-select"><option value="">All Toronto wards</option></select></div></div>
+    </header>
+    <main id="view" class="view" tabindex="-1"><div class="loading-state" role="status"><span class="loading-ring" aria-hidden="true"></span><h1>Tax calculator</h1><p>Loading the decision records and their sources.</p></div></main>
+    <footer class="app-footer"><span>Built for a more informed Toronto.</span><span>Official records are the source of truth.</span></footer>
+  </div>
+  <noscript><div class="noscript">CivicClear needs JavaScript to display decisions. Please enable it in your browser.</div></noscript>
+</body>
+</html>

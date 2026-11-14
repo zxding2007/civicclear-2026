@@ -588,13 +588,17 @@ window.CIVICCLEAR = {
     "rate_percent": 0.601087,
     "includes": "municipal tax and City Building Fund, excludes education tax",
     "source": "2025.CC27.1 Column VI",
-    "url": "https://secure.toronto.ca/council/agenda-item.do?item=2025.CC27.1"
+    "url": "https://secure.toronto.ca/council/agenda-item.do?item=2025.CC27.1",
+    "bylaw_url": "https://www.toronto.ca/legdocs/bylaws/2025/law0105.pdf#page=6",
+    "bylaw_label": "By-law 105-2025, page 6, Column 5"
    },
    "2026": {
     "rate_percent": 0.614311,
     "includes": "municipal tax and City Building Fund, excludes education tax",
     "source": "2026.CC38.1 Column VI",
-    "url": "https://secure.toronto.ca/council/agenda-item.do?item=2026.CC38.1"
+    "url": "https://secure.toronto.ca/council/agenda-item.do?item=2026.CC38.1",
+    "bylaw_url": "https://www.toronto.ca/legdocs/bylaws/2026/law0133.pdf#page=6",
+    "bylaw_label": "By-law 133-2026, page 6, Column 5"
    }
   },
   "assumption": "Same MPAC assessed value in both years; does not estimate actual bill changes from reassessment, credits or fees.",

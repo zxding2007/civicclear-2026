@@ -1,21 +1,22 @@
-# Claude API smoke test — not yet executed with paid credentials
+# Claude API smoke test — no paid request executed
 
-**Reason for this file:** The judge should be able to see exactly what has and has not run. The public CivicClear demonstration uses cached curated records. No Anthropic key has been provided; an actual Claude request has **not** been executed.
+**Status: November 13, 2026.** The four public examples are curated saved records, not real-time model responses. The latest local suite passed **57 Python tests**, including fake-SDK and mocked HTTP analysis tests. Desktop, 375-pixel mobile, keyboard and invalid-input browser checks also ran locally. None of these checks establishes successful paid inference. The latest revision has not yet been pushed or deployed by this preparation work.
 
-## What is ready
+## What the local tests establish
 
-- `pipeline/extract.py`: strict `DecisionCard` structure and conservative system instructions.
-- `pipeline/explain.py`: separate source-citation pass.
-- `pipeline/verify.py`: compare returned quotations against supplied text/PDF; discard unsupported cited statements.
-- `tests/test_ai_contract.py`: local fake-SDK API contract tests, **not** real inference.
+- `server.py` serves the six-page website and API together. `POST /api/analyse` requires configured credentials and the correct analyst password, validates an exact official agenda URL and item identifier, and accepts substantive text plus an optional PDF up to 20 MB.
+- `pipeline/extract.py` requests a `DecisionCard`; `pipeline/explain.py` makes a separate request for a cited explanation. Returned item identifiers must match the requested item.
+- `pipeline/verify.py` flags quotations that do not occur in the submitted text/PDF. It does **not** discard all unsupported narrative or judge interpretation. Unverified stages are excluded from the status rule; citation flags remain visible for review.
+- `tests/test_ai_contract.py` checks the SDK request/response contract with a fake client. `tests/test_server.py` checks API access, input validation and mocked output handling without contacting Anthropic.
+- Successful analysis returns an `ai_unreviewed` preview with human review pending. The server does not save or publish it. GitHub Pages cannot run this analysis endpoint.
 
-## How an authorized administrator could test in a private environment
+## How an authorized administrator can perform the remaining test
 
-1. Review the original item page and any supporting PDF for personal/sensitive information. Public correspondence and speaker names should **not** be sent to a third-party AI account by default.
-2. Store `ANTHROPIC_API_KEY` and `CIVICCLEAR_ANALYST_PASSWORD` in a secure, uncommitted environment or provider secret manager; never post either value in GitHub, ChatGPT messages or the video.
-3. Use a *current, known-supported* model in `CIVICCLEAR_MODEL`, checked against Anthropic's documentation, and set appropriate rate/budget caps.
-4. Open the admin screen; paste *sanitized* official text and optionally a cleaned PDF; run the two-call process.
-5. Compare resulting decision status, individual verbatim citations, ward and participation facts to primary source; record precise deviations and API cost. Do not publish any unreviewed output.
-6. If an unsupported or unverified result appears, label the test failed and keep cached curated demo as the public default.
+1. Review the official agenda text and any report for personal or sensitive information. The cleaner removes named Communications/Speakers sections from pasted text; it does not comprehensively redact text or uploaded PDF contents.
+2. Use Python 3.12 and install `requirements.txt`. Put `ANTHROPIC_API_KEY`, `CIVICCLEAR_ANALYST_PASSWORD` and `CIVICCLEAR_MODEL` in an uncommitted `.env` file or the host environment. Verify the chosen model against current Anthropic documentation before paying for a request. The configured default is not proof of account access or model availability.
+3. Run `python build_site.py`, then `python -m uvicorn server:app --reload`. Open `http://localhost:8000/analyse.html`; the server reads `.env` automatically. The legacy `streamlit run app.py` path remains separate and uses shell variables or Streamlit Secrets.
+4. Enter the analyst password, the exact official Toronto agenda URL, at least 100 characters of substantive sanitized source text, and optionally a reviewed PDF. Submitting the form sends the inputs through two Claude requests and can incur charges.
+5. Compare the returned item ID, decision status, quotations, wards, participation facts and uncertainties against the complete official sources. Record the date, model, outcome, observed cost and reviewer findings without recording credentials. A quotation match alone is not evidence that an interpretation is correct.
+6. Treat incomplete, unsupported or unverifiable results as a failed smoke test. Keep the curated records as the public default and do not publish unreviewed output. The curated examples also still require independent human sign-off.
 
-**Execution record:** NOT EXECUTED (no real Anthropic API key available in this workflow). Do not replace this statement with a claimed pass unless a real run and reviewer record exist.
+**Paid API execution record: NOT EXECUTED.** No real Anthropic request has been performed in this workflow. A real run and its reviewer record are required before changing this status to passed.
