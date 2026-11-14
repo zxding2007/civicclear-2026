@@ -1,7 +1,7 @@
 name: Publish website
 
-# Builds site/data.js from the checked decision records (build_site.py runs the
-# quote and status checks and stops on a mismatch), then publishes site/ to
+# Builds the separate HTML pages and site/data.js from checked decision records
+# (build_site.py stops on quote/status mismatches), then publishes site/ to
 # GitHub Pages. One-time setup by the repository owner:
 # Settings -> Pages -> Source: GitHub Actions.
 
@@ -27,11 +27,16 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
       - name: Install dependencies
         run: python -m pip install -r requirements.txt
       - name: Run tests
         run: python -m pytest -q
-      - name: Build the decision data
+      - name: Check frontend syntax
+        run: node --check site/app.js
+      - name: Build pages and decision data
         run: python build_site.py
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
