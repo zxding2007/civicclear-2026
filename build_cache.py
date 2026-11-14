@@ -8,10 +8,10 @@ from __future__ import annotations
 import argparse
 from datetime import datetime, timezone
 import json
-import os
 from pathlib import Path
 from pipeline.clean import strip_personal_sections
-from pipeline.extract import extract_card, MODEL
+from pipeline.extract import extract_card
+from pipeline.provider import get_config
 from pipeline.explain import explain_with_citations
 from pipeline.verify import verify_card, verify_explanation_segments
 from pipeline.status import overall_status
@@ -19,6 +19,7 @@ from pipeline.status import overall_status
 ROOT = Path(__file__).parent
 
 def write_api_cache(folder: Path, force: bool = False) -> None:
+    config = get_config()
     text_path = folder / 'item_page.txt'
     if not text_path.exists():
         raise FileNotFoundError(f'Missing: {text_path}')
@@ -44,7 +45,8 @@ def write_api_cache(folder: Path, force: bool = False) -> None:
     # Write ONLY after both API calls succeed; no partial cached output.
     output = {
         'card': card.model_dump(), 'verification': verification, 'status': status,
-        'generation_mode': 'ai_unreviewed', 'generated_at': now, 'model': MODEL,
+        'generation_mode': 'ai_unreviewed', 'generated_at': now,
+        'provider': config.provider, 'model': config.model,
     }
     target.write_text(json.dumps(output, ensure_ascii=False, indent=2), encoding='utf8')
     (folder/'explanation.json').write_text(json.dumps(explanation, ensure_ascii=False, indent=2), encoding='utf8')
@@ -57,6 +59,10 @@ if __name__ == '__main__':
     parser.add_argument('--item', required=True, help='Agenda ID, e.g. 2026.PH29.2')
     parser.add_argument('--force', action='store_true')
     args = parser.parse_args()
-    if not os.environ.get('ANTHROPIC_API_KEY'):
-        parser.error('ANTHROPIC_API_KEY is required for generation')
+    try:
+        config = get_config()
+    except ValueError as error:
+        parser.error(str(error))
+    if not config.api_key:
+        parser.error(f'{config.key_env} is required for generation')
     write_api_cache(ROOT / 'data' / 'items' / args.item, args.force)

@@ -64,7 +64,11 @@ In the repository's Pages settings, use **GitHub Actions** as the publication so
 
 The committed generated pages are served directly. Run and commit `python build_site.py` output before deploying template or data changes. To move the existing Render service from Streamlit to this application, explicitly update its start command and health-check setting, or create a separate service from the configuration. A GitHub Pages publication does not perform this migration. Review the Render service's branch and automatic deployment settings before publishing a branch it tracks.
 
-Only enable analysis when wanted: configure `ANTHROPIC_API_KEY`, `CIVICCLEAR_ANALYST_PASSWORD` and a verified supported `CIVICCLEAR_MODEL` in the host environment. Locally, `server.py` loads these from uncommitted `.env`. No paid API call has been tested, and **no new Render deployment has been performed** during this preparation.
+Only enable analysis when wanted. Set `CIVICCLEAR_PROVIDER=deepseek` with `DEEPSEEK_API_KEY`, or `CIVICCLEAR_PROVIDER=anthropic` with `ANTHROPIC_API_KEY`, plus `CIVICCLEAR_ANALYST_PASSWORD`. Keep the key and password in the host's private environment settings, never browser code or GitHub. Locally, `server.py` loads an uncommitted `.env`; `.env.example` leaves keys blank.
+
+`CIVICCLEAR_MODEL` is optional: defaults are `deepseek-flash` and the existing `claude-opus-5-5`, respectively. Remove or replace an old override when switching providers and verify account access to the chosen model. If the provider is unset, DeepSeek is selected only when its key exists and the Anthropic key does not; otherwise Anthropic is selected. Use an explicit provider if both keys exist.
+
+DeepSeek sends two JSON requests and checks the returned quotations locally. PDF text is extracted locally, and a PDF with no readable text is rejected; this path does not provide native Anthropic document citations. Claude's existing flow remains available. No paid request to either provider has been tested, and **no new Render deployment has been performed** during this preparation.
 
 ## Retaining the legacy Streamlit interface
 
@@ -72,7 +76,7 @@ Only enable analysis when wanted: configure `ANTHROPIC_API_KEY`, `CIVICCLEAR_ANA
 
 ## Validation and publication checks
 
-The latest local suite passed **57 Python tests**, including 27 API tests with mocked AI responses. Local browser checks covered desktop and **375-pixel mobile** layouts, normal page navigation, keyboard interaction and invalid calculator inputs. These checks do not establish formal accessibility conformance or paid model availability.
+The current revision passes **129 Python tests**, including provider selection, mocked DeepSeek and Claude requests, and quotation source-attribution checks. Local browser checks covered desktop and **375-pixel mobile** layouts, normal page navigation, keyboard interaction and invalid calculator inputs. These checks do not establish formal accessibility conformance or paid model availability.
 
 After an actual deployment, verify the new destination separately:
 

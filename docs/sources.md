@@ -25,6 +25,10 @@
 
 ## Developer APIs and libraries
 
+- [DeepSeek API quickstart](https://api-docs.deepseek.com/): `deepseek-flash` is the default used by this integration, with the selected key held only in the Python environment. Verify current account access before a live test.
+- [DeepSeek JSON output](https://api-docs.deepseek.com/guides/json_mode/): used for separate decision-card and explanation responses. CivicClear validates the card and checks model-provided quotation references locally; it does not claim equivalence to Anthropic's native citation feature. PDF text is extracted locally, and PDFs without readable text are rejected by this integration.
+- [FastAPI](https://fastapi.tiangolo.com/), [Uvicorn](https://www.uvicorn.org/), [HTTPX](https://www.python-httpx.org/) and [python-multipart](https://multipart.fastapiexpert.com/): connected app, HTTP requests and uploads.
+
 - [Anthropic model list](https://platform.claude.com/docs/en/models/overview): `claude-opus-5-5`, list pricing $4/input million tokens, $20/output million tokens as reviewed 2026-11-12. Actual consumption, billing and product availability can change.
 - [Structured outputs](https://platform.claude.com/docs/en/build-with-claude/structured-outputs): `client.messages.parse`, Pydantic models.
 - [Citations](https://platform.claude.com/docs/en/build-with-claude/citations): PDF/text source citations; mutually incompatible with a single strict JSON output request.
@@ -35,6 +39,6 @@
 ## Website design kit and AI coding tools
 
 - **taste-skill** frontend kit, bundled under `site/assets/` (CSS system, layout, motion, diagram and icon files). Third-party code used by the original landing page. The folder is retained, but none of the current six application pages loads it.
-- **Claude Code** (Anthropic) built the original static website and its build script; **ChatGPT** (OpenAI) drafted the Python app, the four cards and the documents. **OpenAI Codex** assisted with the latest multi-page application, FastAPI server, API tests, calculator and accessibility corrections, and related documentation. That revision has 57 passing Python tests and targeted browser checks of navigation, filters, calculations, invalid input, mobile/keyboard use, and the saved-data fallback. The revision is locally checked; these results do not establish a deployment or full accessibility audit. Details in [`ai_usage.md`](ai_usage.md).
+- **Claude Code** (Anthropic) built the original static website and its build script; **ChatGPT** (OpenAI) drafted the Python app, the four cards and the documents. **OpenAI Codex** assisted with the latest multi-page application, FastAPI server, API tests, calculator and accessibility corrections, and related documentation. The earlier multi-page revision had 57 passing Python tests and targeted browser checks of navigation, filters, calculations, invalid input, mobile/keyboard use, and the saved-data fallback. Those results do not establish a deployment or full accessibility audit. The subsequent provider-support revision uses mocked tests; neither Claude nor DeepSeek has received a real paid inference request in this work. Details in [`ai_usage.md`](ai_usage.md).
 
 Versions are deliberately version-ranged in `requirements.txt` for Python 3.12. Obtain installed package versions with `pip freeze` for a release lock file and review each licence before redistributing dependencies.

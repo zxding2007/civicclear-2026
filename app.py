@@ -12,6 +12,7 @@ from datetime import date
 import streamlit as st
 from calculator import compare
 from pipeline.clean import strip_personal_sections
+from pipeline.provider import get_config
 from pipeline.verify import verify_card, verify_explanation_segments
 from pipeline.schema import DecisionCard
 from pipeline.status import overall_status, LABELS
@@ -255,10 +256,21 @@ def live_analysis():
     st.markdown('## Analyse a new agenda item (admin only)')
     st.write('Paste an official item page and optionally upload its staff-report PDF. This feature makes paid API requests. Input is processed for this session only.')
     password = _read_secret('CIVICCLEAR_ANALYST_PASSWORD')
-    api_key = _read_secret('ANTHROPIC_API_KEY')
-    if not password or not api_key:
+    # Read either provider from the host environment or Streamlit Secrets.
+    settings = {key: _read_secret(key) for key in (
+        'ANTHROPIC_API_KEY', 'DEEPSEEK_API_KEY', 'CIVICCLEAR_PROVIDER', 'CIVICCLEAR_MODEL',
+    )}
+    try:
+        config = get_config(settings)
+    except ValueError:
+        st.warning('Live analysis is disabled. Configure CIVICCLEAR_PROVIDER as anthropic or deepseek.')
+        return
+    if not password or not config.api_key:
         st.warning('Live analysis is disabled because the administrator password and/or API key has not been configured. The public demo still works.')
         return
+    st.caption(f'Configured provider: {config.label}. Submitted sources are sent to this provider for analysis.')
+    if config.provider == 'deepseek':
+        st.caption('PDFs need selectable text. Extracted text is sent to DeepSeek; scanned images are not read. Supporting quotations are checked locally.')
     candidate = st.text_input('Administrator password', type='password')
     if not candidate:
         return
@@ -285,17 +297,19 @@ def live_analysis():
         from pipeline.extract import extract_card
         from pipeline.explain import explain_with_citations
         # Put the key in the process environment only if it was supplied via Secrets.
-        os.environ['ANTHROPIC_API_KEY'] = api_key
+        os.environ[config.key_env] = config.api_key
+        os.environ['CIVICCLEAR_PROVIDER'] = config.provider
+        os.environ['CIVICCLEAR_MODEL'] = config.model
         cleaned = strip_personal_sections(item_page)
         try:
-            import anthropic
             with st.spinner('Reading sources and verifying claims...'):
                 card = extract_card(cleaned, pdf)
                 check = verify_card(card, cleaned, pdf)
                 status = overall_status(card, check['stages'])
                 explanation = verify_explanation_segments(
                     explain_with_citations(cleaned, pdf, item_url), cleaned, pdf)
-        except (anthropic.RateLimitError, anthropic.APIStatusError, anthropic.APIConnectionError, RuntimeError, ValueError) as exc:
+        except Exception:
+            # Keep provider errors, submitted sources and credentials out of the UI.
             st.error('Analysis failed. Check API access, uploaded PDF, or source length and retry. No partial answer is shown.')
             return
         import re

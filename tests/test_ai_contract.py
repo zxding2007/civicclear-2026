@@ -6,6 +6,14 @@ from pipeline import extract, explain
 from pipeline.schema import DecisionCard
 
 
+@pytest.fixture(autouse=True)
+def anthropic_configuration(monkeypatch):
+    monkeypatch.setenv('CIVICCLEAR_PROVIDER', 'anthropic')
+    monkeypatch.setenv('ANTHROPIC_API_KEY', 'fake-anthropic-key')
+    monkeypatch.delenv('DEEPSEEK_API_KEY', raising=False)
+    monkeypatch.delenv('CIVICCLEAR_MODEL', raising=False)
+
+
 class FakeMessages:
     def parse(self, *, model, messages, output_format, **kwargs):
         assert output_format is DecisionCard
@@ -37,6 +45,7 @@ class FakeMessages:
 
 class FakeClient:
     def __init__(self, **kwargs):
+        assert kwargs['api_key'] == 'fake-anthropic-key'
         self.messages=FakeMessages()
 
 
@@ -63,3 +72,25 @@ def test_no_real_sdk_initialization_without_explicit_invocation():
     # Imported modules alone do not call Anthropic.
     assert hasattr(extract,'extract_card')
     assert hasattr(explain,'explain_with_citations')
+
+
+def test_anthropic_reads_model_and_credentials_at_call_time(monkeypatch):
+    seen = []
+    class Messages(FakeMessages):
+        def parse(self, **kwargs):
+            seen.append(kwargs['model'])
+            return super().parse(**kwargs)
+        def create(self, **kwargs):
+            seen.append(kwargs['model'])
+            return super().create(**kwargs)
+    class Client:
+        def __init__(self, **kwargs):
+            assert kwargs['api_key'] == 'changed-after-import'
+            self.messages = Messages()
+    monkeypatch.setitem(sys.modules, 'anthropic', SimpleNamespace(Anthropic=Client))
+    monkeypatch.setenv('ANTHROPIC_API_KEY', 'changed-after-import')
+    monkeypatch.setenv('CIVICCLEAR_MODEL', 'test-model-one')
+    extract.extract_card('Council received this item for information.', None)
+    monkeypatch.setenv('CIVICCLEAR_MODEL', 'test-model-two')
+    explain.explain_with_citations('Council received this item for information.', None)
+    assert seen == ['test-model-one', 'test-model-two']

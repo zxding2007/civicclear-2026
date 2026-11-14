@@ -14,7 +14,7 @@ python -m pytest -q
 python -m uvicorn server:app --reload
 ```
 
-Open `http://localhost:8000`. The latest local suite passed **57 tests**, including mocked API tests. No real paid AI call or full-source human sign-off is implied.
+Open `http://localhost:8000`. The earlier multi-page revision passed **57 tests**, including mocked API tests. Provider support also uses mocks; rerun the full suite for the current result. No real paid AI call or full-source human sign-off is implied.
 
 The redesigned code has not been pushed or deployed as part of these preparation steps. The existing public [Pages demo](https://zxding2007.github.io/civicclear-2026/) and [earlier Render/Streamlit demo](https://civicclear-2026.onrender.com/) may still show the older interface. Follow [publish_guide.md](publish_guide.md) and verify the intended public version before describing it as deployed.
 
@@ -38,7 +38,7 @@ The redesigned code has not been pushed or deployed as part of these preparation
 - **One-page Municipal Readiness Report:** https://github.com/zxding2007/civicclear-2026/blob/main/docs/readiness_report.pdf — review its contents against the current app and confirm it is one page before attaching it.
 - **2–3 minute demo video:** **[TO BE RECORDED AND PUBLISHED — add a verified URL]**
 - **Project description:** review the current draft in [checkpoints_and_devpost.md](checkpoints_and_devpost.md), especially the deployment status and teammate credits.
-- **AI disclosures:** [ai_usage.md](ai_usage.md); include all teammate tools actually used. Optional Claude analysis has only been tested with mocks; source/report human review is pending.
+- **AI disclosures:** [ai_usage.md](ai_usage.md); include all teammate tools actually used. Optional Claude and DeepSeek analysis has only been tested with mocks; source/report human review is pending.
 
 ## External completion items
 

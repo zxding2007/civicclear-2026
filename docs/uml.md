@@ -15,7 +15,9 @@ flowchart LR
     API -->|POST /api/tax| C[calculator.compare]
     C --> R[(data/tax_rates.json)]
     API -->|POST /api/analyse| P[pipeline: clean, extract, verify, status, explain]
-    P --> A[Anthropic API: two requests]
+    P --> Q{Selected provider}
+    Q --> A[Anthropic: structured card + native citations]
+    Q --> K[DeepSeek: two JSON requests, locally checked quotes]
     B -->|Build command| S[site/data.js]
     S --> G[GitHub Pages snapshot]
     H --> G
@@ -123,7 +125,7 @@ sequenceDiagram
     participant UI as Browser website
     participant API as FastAPI server
     participant R as Redaction
-    participant AI as Claude API
+    participant AI as Selected provider: Claude or DeepSeek
     participant V as Source verification
     participant S as Status rules
     A->>UI: Enter password, official URL, agenda text and optional PDF
@@ -131,15 +133,16 @@ sequenceDiagram
     API->>API: Check credentials, exact item URL and upload
     API->>R: Remove Communications and Speakers sections
     R-->>API: Cleaned text
-    API->>AI: Structured extraction (no citations)
+    Note over API,AI: DeepSeek receives text, including locally extracted readable PDF text
+    API->>AI: Structured extraction (Claude parse or DeepSeek JSON)
     AI-->>API: Pydantic DecisionCard
     API->>API: Require item ID to match submitted URL
     API->>V: Verify stage quotes against submitted sources
     V-->>API: Verified stage flags
     API->>S: Compute overall decision status
     S-->>API: Decision-status label
-    API->>AI: Separate cited explanation request
-    AI-->>API: Explanations and citation locations
+    API->>AI: Separate explanation request
+    AI-->>API: Claude citations or DeepSeek JSON quotation references
     API->>V: Verify explanation quotes
     V-->>API: Explanation citation flags
     API-->>UI: Item marked ai_unreviewed, human review pending
@@ -149,13 +152,20 @@ sequenceDiagram
 
 ## Design rationale
 
-1. **Two API calls:** Structured JSON output and interleaved citations cannot be requested in the same Claude API response, so the system separates format validation and cited narrative.
+1. **Two API calls:** Both providers separate structured extraction from explanation. Claude keeps its structured-output and native citation requests. DeepSeek returns JSON for both passes; Pydantic validates the card and local source checks validate the quoted wording. Model-provided references are not native Anthropic citations.
 2. **Code-determined status:** A quote must match a source before its stage can drive a status label. Council actions take precedence over earlier committee actions.
 3. **Saved examples in both modes:** The connected app reads four curated cases through its Python API. GitHub Pages uses the same records bundled into `site/data.js`. Opening either version makes no AI request and incurs no AI charge.
 4. **Privacy-aware ingestion:** Drop named-correspondent and speaker sections before external API transmission. In a production system this must be supplemented by manual review and a privacy impact assessment.
 5. **Cautious uncertainty:** The absence of a confirmed participation deadline is shown as such, not guessed from a calendar date.
 6. **One shared backend:** The connected website reuses the existing record builder, calculator and analysis pipeline. The browser receives results over HTTP while API credentials remain on the server. The static snapshot cannot run new-item analysis.
 7. **Separate documents, shared source:** Six generated HTML pages use ordinary navigation while one template keeps their layout consistent. Shared JavaScript does not replace document navigation with a client-side router.
+
+
+## Provider selection
+
+Configure `CIVICCLEAR_PROVIDER=deepseek` plus `DEEPSEEK_API_KEY`, or `CIVICCLEAR_PROVIDER=anthropic` plus `ANTHROPIC_API_KEY`. Web analysis also requires `CIVICCLEAR_ANALYST_PASSWORD`. When the provider is unset, DeepSeek is selected only if its key is present and the Anthropic key is absent; otherwise Anthropic is selected. Defaults are `deepseek-flash` and the existing `claude-opus-5-5`; `CIVICCLEAR_MODEL` can override them. Remove or replace a stale model override when switching provider. Keys remain server-side for the web app, CLI and legacy Streamlit interface.
+
+The DeepSeek path extracts PDF text locally and rejects files without readable text; it does not add OCR or native PDF input. Source text and extracted report text go to the chosen provider only on explicit analysis. The Claude path continues to use its existing PDF/text document inputs and citation API. The shared verification and deterministic status rules remain in place for both paths.
 
 ## Running and hosting
 
@@ -165,4 +175,4 @@ Create the environment with `python3.12 -m venv .venv` on macOS/Linux, or `py -3
 
 ## Local validation status
 
-On November 13, 2026, **57 Python tests passed**. Browser checks covered desktop and 375-pixel mobile layouts, page navigation, keyboard interaction and invalid calculator inputs. These checks do not constitute a formal accessibility audit. AI requests were mocked; no paid inference or new production deployment was tested. Independent human review of the curated decisions remains pending.
+The earlier multi-page revision passed **57 Python tests** on November 13, 2026. Provider support uses mocked tests; rerun the full suite for the current revision and record its result separately. Browser checks covered desktop and 375-pixel mobile layouts, page navigation, keyboard interaction and invalid calculator inputs. These checks do not constitute a formal accessibility audit. AI requests were mocked; neither provider has received a real paid inference request, and no new production deployment was tested. Independent human review of the curated decisions remains pending.

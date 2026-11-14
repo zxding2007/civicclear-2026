@@ -6,7 +6,7 @@
 
 CivicClear gives residents a plain-language summary of **what was proposed**, **which decision-making body actually acted**, **which wards appear in the record**, **what is and is not known about participation**, and **the text supporting each claim**.
 
-> **Project state (Nov 13, 2026):** The preferred local application serves the website and a FastAPI backend together through `server.py`. GitHub Pages remains a static snapshot of four curated Toronto agenda items and never calls an AI model. The four cards were drafted with ChatGPT from official agenda excerpts and pass the automated quote and status checks; the team's human sign-off is **still pending** and each card says so. The repository also retains the earlier Streamlit version (https://civicclear-2026.onrender.com/, Render Free Plan, slow to wake). The connected app includes an optional, password-gated Claude API analyser for new items. Its API integration has only been exercised with fake clients: **no real API call has been made**. The new Python server has not been deployed to the existing Render service as part of this change.
+> **Project state (Nov 13, 2026):** The preferred local application serves the website and a FastAPI backend together through `server.py`. GitHub Pages remains a static snapshot of four curated Toronto agenda items and never calls an AI model. The four cards were drafted with ChatGPT from official agenda excerpts and pass the automated quote and status checks; the team's human sign-off is **still pending** and each card says so. The repository also retains the earlier Streamlit version (https://civicclear-2026.onrender.com/, Render Free Plan, slow to wake). The connected app includes an optional, password-gated Claude or DeepSeek analyser for new items. Its API integration has only been exercised with fake clients: **no real API call has been made**. The new Python server has not been deployed to the existing Render service as part of this change.
 
 ## Why this exists
 
@@ -22,7 +22,7 @@ A statement like “received for information” may sound like approval to a res
 - **Have Your Say:** Never infer a comment deadline from a meeting date. For PH29.2, a *separate current City consultation portal* confirms an interactive feedback map through **November 30, 2026**; the app auto-stops advertising it as open afterward. Other items do not claim unverified open windows.
 - **Before & After:** A residential **municipal** property tax estimate comparing 2025 and 2026 at a *constant* MPAC assessed value. Education tax is excluded.
 - **Evidence and uncertainty:** Expand the original quote and source link for every example explanation, and see important unknowns.
-- **Optional admin analysis (connected app and legacy Streamlit, untested live):** With an Anthropic key and admin password, paste official Toronto agenda text and an optional staff-report PDF for two separate AI passes: structured extraction and cited explanation. The connected app returns an unreviewed preview without saving or publishing it.
+- **Optional admin analysis (connected app and legacy Streamlit, untested live):** With a DeepSeek or Anthropic key and admin password, paste official Toronto agenda text and an optional staff-report PDF for two separate AI passes: structured extraction and a source-linked explanation. DeepSeek receives locally extracted PDF text; Claude retains its document-citation flow. The connected app returns an unreviewed preview without saving or publishing it.
 
 ### Four example items
 
@@ -63,7 +63,27 @@ cp .env.example .env
 python -m uvicorn server:app --reload
 ```
 
-`server.py` reads `.env` automatically. Set `ANTHROPIC_API_KEY` and `CIVICCLEAR_ANALYST_PASSWORD` to enable analysis; `CIVICCLEAR_MODEL` selects the model. Existing environment variables take precedence over `.env`. No external LLM call occurs until an administrator submits the protected analysis form. Live API access and model availability still need a real, authorized smoke test.
+`server.py` reads `.env` automatically. Choose one provider and fill its key plus a strong analyst password in your private `.env` or host environment. The blank values below intentionally leave analysis disabled until filled.
+
+For DeepSeek:
+
+```dotenv
+CIVICCLEAR_PROVIDER=deepseek
+DEEPSEEK_API_KEY=
+CIVICCLEAR_ANALYST_PASSWORD=
+```
+
+For Claude:
+
+```dotenv
+CIVICCLEAR_PROVIDER=anthropic
+ANTHROPIC_API_KEY=
+CIVICCLEAR_ANALYST_PASSWORD=
+```
+
+`CIVICCLEAR_MODEL` is optional. The defaults are `deepseek-flash` for DeepSeek and the existing `claude-opus-5-5` for Anthropic; verify access in your provider account. **Remove or replace an old model override when switching provider.** If `CIVICCLEAR_PROVIDER` is unset, DeepSeek is selected only when `DEEPSEEK_API_KEY` is present and `ANTHROPIC_API_KEY` is absent; otherwise Anthropic is selected. An explicit provider is clearer when both keys exist. Existing environment variables take precedence over `.env`.
+
+DeepSeek uses two JSON responses: a Pydantic-validated decision card and an explanation with model-provided quotation references checked against the supplied sources. This is not Anthropic's native citation feature. Its PDF path extracts text locally and rejects PDFs without readable text; scanned documents need readable text supplied separately. Claude retains its existing structured-output and native document-citation requests. Keys stay on the Python server. No external AI call occurs until an administrator submits analysis, or an operator explicitly runs the cache-generation command. Neither provider has been tested with a real paid request in this work. See the [DeepSeek API](https://api-docs.deepseek.com/) and [JSON output](https://api-docs.deepseek.com/guides/json_mode/) documentation.
 
 The earlier Streamlit interface remains available separately:
 
@@ -73,7 +93,7 @@ streamlit run app.py
 
 For Streamlit, export the environment variables in your shell or use `.streamlit/secrets.toml` locally. Streamlit Community Cloud secrets are entered in the app's Settings / Secrets dialog; **do not commit secrets**. The Streamlit entrypoint does not serve the new website or `/api/` routes.
 
-To generate a cache for a new item by CLI: prepare `data/items/<ID>/item_page.txt`, `meta.json`, and optionally `report.pdf`; run `python build_cache.py --item <ID>` with `ANTHROPIC_API_KEY` set. `--force` is required to replace existing curated cards, and generated output is labelled **AI unreviewed**.
+To generate a cache for a new item by CLI: prepare `data/items/<ID>/item_page.txt`, `meta.json`, and optionally `report.pdf`; run `python build_cache.py --item <ID>` with the selected provider and its API key configured. The CLI loads `.env`; it does not use the web analyst password. `--force` is required to replace existing curated cards, and generated output is labelled **AI unreviewed**.
 
 ## Website structure and rebuild
 
@@ -106,7 +126,7 @@ node --check site/app.js
 
 Node.js 22 is used for the JavaScript syntax check; no npm install is needed.
 
-The complete local suite on 2026-11-13 passed **57 tests**, including 27 API tests covering bundled data, tax validation, access checks, source URLs, uploads and mocked analysis responses. Local browser checks covered desktop and **375-pixel mobile** layouts, page navigation, keyboard interaction and invalid calculator inputs. These checks are not a formal accessibility audit, and do **not** imply full PDFs have been parsed or paid API calls have been verified.
+The current revision passes **129 tests**, including mocked DeepSeek requests, Claude contract tests, provider selection, and source-attribution checks. These tests cover bundled data, tax validation, access checks, source URLs, uploads and mocked analysis responses. Local browser checks covered desktop and **375-pixel mobile** layouts, page navigation, keyboard interaction and invalid calculator inputs. These checks are not a formal accessibility audit, and do **not** imply full PDFs have been parsed or paid API calls have been verified.
 
 ## Architecture and data flow
 
@@ -122,7 +142,7 @@ flowchart LR
     T -->|Estimate| UI
     API -->|POST /api/analyse: password required| P[Existing pipeline]
     A[Agenda text and optional PDF] --> P
-    P --> X[Claude extraction + cited explanation]
+    P --> X[Selected provider: Claude or DeepSeek]
     X --> V[Quote verification + status rules]
     V -->|Unreviewed preview, not saved| UI
     B -->|Build command| S[site/data.js]
@@ -133,7 +153,7 @@ flowchart LR
 
 The browser uses `GET /api/bootstrap` for the saved records and runtime availability, `POST /api/tax` for calculations, and multipart `POST /api/analyse` for an authorized new-item preview. `GET /api/health` returns a health status. FastAPI serves `site/` after the API routes; secrets stay in the Python process. GitHub Pages uses the generated `site/data.js` snapshot and has no Python server or analysis endpoint.
 
-Key design choices: (1) structured JSON and document citations require separate API requests; (2) verified stages drive decision status in code, not model sentiment; (3) unknown participation stays unknown; (4) the default records are read from local files, so browsing never incurs API cost; (5) both the connected app and static build reuse `build_site.build()`, which reruns the quote check and status rule and rejects a computed status that differs from the stored or golden one. Optional Claude extraction and explanation have not been run against the real API. See [`docs/uml.md`](docs/uml.md).
+Key design choices: (1) extraction and explanation use separate requests; Claude uses its citation API while DeepSeek returns JSON quotation references for local checking; (2) verified stages drive decision status in code, not model sentiment; (3) unknown participation stays unknown; (4) the default records are read from local files, so browsing never incurs API cost; (5) both the connected app and static build reuse `build_site.build()`, which reruns the quote check and status rule and rejects a computed status that differs from the stored or golden one. Neither optional provider has been exercised with a real paid API request. See [`docs/uml.md`](docs/uml.md).
 
 ## Accuracy checks and limitations
 
@@ -161,7 +181,7 @@ Key design choices: (1) structured JSON and document citations require separate 
 
 The existing GitHub Pages address is https://zxding2007.github.io/civicclear-2026/. After the reviewed changes reach `main`, `.github/workflows/pages.yml` runs the tests and `build_site.py`, then publishes the generated six-page `site/` folder; a status mismatch stops publication. This static version needs no server or API key, uses the bundled records and browser tax calculation, and cannot analyse new records. `site/index.html` also opens directly from disk. A local commit or a push to a review branch does not by itself update the Pages site.
 
-For the connected app, `render.yaml` supplies a Python web-service configuration: build with `pip install -r requirements.txt && python build_site.py`, start with `uvicorn server:app --host 0.0.0.0 --port $PORT`, and use the HTTP health-check path `/api/health`. Use Python 3.12. Set the two secrets in the host's environment only if live analysis is wanted. Applying this configuration to a new service, or changing the existing Render service's start command from Streamlit to Uvicorn, is a separate deployment step; neither has been performed by this change.
+For the connected app, `render.yaml` supplies a Python web-service configuration: build with `pip install -r requirements.txt && python build_site.py`, start with `uvicorn server:app --host 0.0.0.0 --port $PORT`, and use the HTTP health-check path `/api/health`. Use Python 3.12. Select the provider and set its API key plus the analyst password in the host's private environment only if live analysis is wanted; see the configuration examples above. Applying this configuration to a new service, or changing the existing Render service's start command from Streamlit to Uvicorn, is a separate deployment step; neither has been performed by this change.
 
 This repository is already public at https://github.com/zxding2007/civicclear-2026 and the earlier Streamlit version is deployed as a Python Streamlit service on Render Free Plan at https://civicclear-2026.onrender.com/. To retain that interface on [Streamlit Community Cloud](https://docs.streamlit.io/deploy/streamlit-community-cloud), use `app.py` as the entrypoint and Python 3.12. Configure Secrets only if you want to enable admin analysis. Check both desktop and mobile views and wake the free instance before judging. A public deployed URL is optional according to Devpost, but a repository, 2–3 minute demo and one-page report are required.
 
@@ -173,7 +193,7 @@ See [`docs/publish_guide.md`](docs/publish_guide.md) for review-branch push inst
 - [Municipal Readiness Report (editable Markdown)](docs/readiness_report.md)
 - [UML diagrams](docs/uml.md)
 - [AI disclosure](docs/ai_usage.md)
-- [Live AI smoke test status (no real API key)](docs/live_ai_smoke_test.md)
+- [Live AI smoke test status (no paid request executed)](docs/live_ai_smoke_test.md)
 - [Video recording and Devpost final checklist](docs/recording_and_submission_steps.md)
 - [Data and library credits](docs/sources.md)
 - [Checkpoint messages and Devpost draft](docs/checkpoints_and_devpost.md)

@@ -1,5 +1,6 @@
-"""Optional cited explanation, separate from strict JSON extraction."""
-from .extract import SYSTEM, MODEL, build_documents
+"""Optional source-linked explanation, separate from strict JSON extraction."""
+from .extract import SYSTEM, build_documents
+from .provider import get_config
 
 QUESTION = '''Explain in simple English: (1) proposed and why, (2) stage and decision,
 (3) affected geography and people, (4) confirmed ways to participate or unknowns.
@@ -7,10 +8,16 @@ Keep claims short. Cite each substantive sentence. Never infer future availabili
 
 
 def explain_with_citations(item_page_text: str, pdf_bytes: bytes | None, item_url: str = '') -> list[dict]:
+    config = get_config()
+    if not config.api_key:
+        raise ValueError(f'{config.key_env} is required for {config.label} analysis.')
+    if config.provider == 'deepseek':
+        from . import deepseek
+        return deepseek.explain_with_citations(item_page_text, pdf_bytes, item_url, config=config, system=SYSTEM)
     import anthropic
-    client = anthropic.Anthropic(timeout=90.0, max_retries=1)
+    client = anthropic.Anthropic(api_key=config.api_key, timeout=90.0, max_retries=1)
     response = client.messages.create(
-        model=MODEL, max_tokens=4000, system=SYSTEM,
+        model=config.model, max_tokens=4000, system=SYSTEM,
         messages=[{'role': 'user', 'content': [
             *build_documents(item_page_text, pdf_bytes, citations=True),
             {'type': 'text', 'text': QUESTION},

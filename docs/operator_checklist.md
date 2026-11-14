@@ -1,6 +1,6 @@
 # Operator checklist — current app and release preparation
 
-**Current checkout:** the redesigned app has six separate pages: Overview, Decisions, Decision details, Tax calculator, Sources & method, and Analyse a record. The latest local suite passed **57 tests**. The redesign and documentation updates are local changes; this checklist does not establish that they have been pushed or deployed.
+**Current checkout:** the redesigned app has six separate pages: Overview, Decisions, Decision details, Tax calculator, Sources & method, and Analyse a record. The earlier multi-page revision passed **57 tests**; rerun the full suite for the provider-support revision. The redesign and documentation updates are local changes; this checklist does not establish that they have been pushed or deployed.
 
 The existing public addresses are the [GitHub Pages demo](https://zxding2007.github.io/civicclear-2026/) and the [earlier Render/Streamlit demo](https://civicclear-2026.onrender.com/). They may still show the older interface until the new code is published. Follow [publish_guide.md](publish_guide.md) for deployment; use the same existing repository and checkout.
 
@@ -45,10 +45,10 @@ Open `http://localhost:8000`. The first command regenerates all six HTML pages a
 
 ## Optional live AI test
 
-The extraction and explanation integration has been tested with mocks, not real paid Claude calls. Keep that distinction in the demo and submission.
+The optional Claude and DeepSeek workflows use mocked tests; no real paid request to either provider has been performed in this work. Keep that distinction in the demo and submission.
 
-- [ ] If the team chooses to test it, configure its own Anthropic key, a strong analyst password, and a valid model in private environment settings. Never commit secrets.
-- [ ] Review uploaded PDFs for personal information first. The page-text headings scrubber does **not** redact PDF content.
+- [ ] If the team chooses to test it, set `CIVICCLEAR_PROVIDER=deepseek` plus `DEEPSEEK_API_KEY`, or `CIVICCLEAR_PROVIDER=anthropic` plus `ANTHROPIC_API_KEY`, and a strong `CIVICCLEAR_ANALYST_PASSWORD` in private environment settings. Never commit secrets. `CIVICCLEAR_MODEL` is optional; remove or replace any old override when switching providers.
+- [ ] Review uploaded PDFs for personal information first. The page-text headings scrubber does **not** redact PDF content. DeepSeek receives locally extracted PDF text and rejects scans without readable text; its JSON quotation references are not native Anthropic citations.
 - [ ] Submit one official record, record the actual model and cost, and compare every output and citation with the full source before reuse. An analysis preview is not saved or published automatically.
 - [ ] Preserve human review as pending until a person actually completes it. A quotation match alone does not establish a correct interpretation.
 

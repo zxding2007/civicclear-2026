@@ -13,15 +13,19 @@ PAGE = 'City Council Decision\n' + QUOTE + '\n' + ('The official record describe
 
 @pytest.fixture
 def client(monkeypatch):
-    monkeypatch.delenv('CIVICCLEAR_ANALYST_PASSWORD', raising=False)
-    monkeypatch.delenv('ANTHROPIC_API_KEY', raising=False)
+    for name in ('CIVICCLEAR_ANALYST_PASSWORD', 'ANTHROPIC_API_KEY', 'DEEPSEEK_API_KEY',
+                 'CIVICCLEAR_PROVIDER', 'CIVICCLEAR_MODEL'):
+        monkeypatch.delenv(name, raising=False)
     return TestClient(server.app)
 
 
-@pytest.fixture
-def enabled(monkeypatch):
+@pytest.fixture(params=['anthropic', 'deepseek'])
+def enabled(client, monkeypatch, request):
     monkeypatch.setenv('CIVICCLEAR_ANALYST_PASSWORD', 'test-password')
-    monkeypatch.setenv('ANTHROPIC_API_KEY', 'fake-key-never-sent')
+    monkeypatch.setenv('CIVICCLEAR_PROVIDER', request.param)
+    key = 'DEEPSEEK_API_KEY' if request.param == 'deepseek' else 'ANTHROPIC_API_KEY'
+    monkeypatch.setenv(key, 'fake-key-never-sent')
+    return request.param
 
 
 def form(**overrides):
@@ -45,7 +49,9 @@ def test_bootstrap_serves_verified_records_and_runtime(client):
     assert response.status_code == 200
     data = response.json()
     assert len(data['items']) == 4
-    assert data['runtime'] == {'mode': 'connected', 'analysis_enabled': False}
+    assert data['runtime'] == {
+        'mode': 'connected', 'analysis_enabled': False, 'analysis_provider': 'anthropic',
+    }
     assert all(all(item['checks']['stages']) for item in data['items'])
     assert data['tax']['example']['difference'] == 92.57
     assert client.get('/api/health').json() == {'status': 'ok'}
@@ -54,6 +60,7 @@ def test_bootstrap_serves_verified_records_and_runtime(client):
 def test_bootstrap_exposes_configuration_without_secrets(client, enabled):
     response = client.get('/api/bootstrap')
     assert response.json()['runtime']['analysis_enabled'] is True
+    assert response.json()['runtime']['analysis_provider'] == enabled
     assert 'fake-key-never-sent' not in response.text
     assert 'test-password' not in response.text
 
@@ -164,6 +171,8 @@ def test_analysis_returns_verified_unreviewed_item(client, enabled, monkeypatch)
     assert item['meta']['human_review'] == 'pending'
     assert item['meta']['source_checked_on'] is None
     assert item['meta']['generation_mode'] == 'ai_unreviewed'
+    assert item['meta']['ai_provider'] == enabled
+    assert item['meta']['ai_model']
     assert item['evidence'] is None
 
 
@@ -183,3 +192,40 @@ def test_analysis_does_not_expose_provider_errors(client, enabled, monkeypatch):
     assert response.status_code == 502
     assert 'fake-key-never-sent' not in response.text
     assert 'private source text' not in response.text
+
+
+def test_deepseek_key_alone_enables_selected_provider(client, monkeypatch):
+    monkeypatch.setenv('CIVICCLEAR_ANALYST_PASSWORD', 'test-password')
+    monkeypatch.setenv('DEEPSEEK_API_KEY', 'private-deepseek-key')
+    response = client.get('/api/bootstrap')
+    assert response.json()['runtime'] == {
+        'mode': 'connected', 'analysis_enabled': True, 'analysis_provider': 'deepseek',
+    }
+    assert 'private-deepseek-key' not in response.text
+
+
+@pytest.mark.parametrize('provider', ['deepseek', 'unsupported'])
+def test_selected_provider_cannot_use_another_providers_key(client, monkeypatch, provider):
+    monkeypatch.setenv('CIVICCLEAR_ANALYST_PASSWORD', 'test-password')
+    monkeypatch.setenv('ANTHROPIC_API_KEY', 'private-anthropic-key')
+    monkeypatch.setenv('CIVICCLEAR_PROVIDER', provider)
+    monkeypatch.setattr(server, 'extract_card', lambda *args: pytest.fail('Wrong provider key reached model'))
+    response = client.get('/api/bootstrap')
+    assert response.json()['runtime']['analysis_enabled'] is False
+    assert response.json()['runtime']['analysis_provider'] == ('deepseek' if provider == 'deepseek' else None)
+    assert client.post('/api/analyse', data=form()).status_code == 503
+
+
+def test_deepseek_rejects_unreadable_report_before_model(client, monkeypatch):
+    import io
+    from pypdf import PdfWriter
+    writer = PdfWriter()
+    writer.add_blank_page(width=100, height=100)
+    output = io.BytesIO()
+    writer.write(output)
+    monkeypatch.setenv('CIVICCLEAR_ANALYST_PASSWORD', 'test-password')
+    monkeypatch.setenv('DEEPSEEK_API_KEY', 'unused-test-key')
+    monkeypatch.setattr(server, 'extract_card', lambda *args: pytest.fail('Unreadable report reached model'))
+    response = client.post('/api/analyse', data=form(), files={'report': ('scan.pdf', output.getvalue(), 'application/pdf')})
+    assert response.status_code == 422
+    assert 'selectable text' in response.json()['detail']

@@ -1,22 +1,38 @@
-# Claude API smoke test — no paid request executed
+# AI provider smoke test — no paid request executed
 
-**Status: November 13, 2026.** The four public examples are curated saved records, not real-time model responses. The latest local suite passed **57 Python tests**, including fake-SDK and mocked HTTP analysis tests. Desktop, 375-pixel mobile, keyboard and invalid-input browser checks also ran locally. None of these checks establishes successful paid inference. The latest revision has not yet been pushed or deployed by this preparation work.
+The four public examples are pre-generated saved records. Browsing them does not call Claude or DeepSeek. The earlier multi-page revision passed **57 Python tests** and targeted local browser checks; provider support uses mocked tests. Run `python -m pytest -q` for the current revision's result. A passing mocked test is not a successful paid inference or a provider-account access check. No new deployment was performed for provider support.
 
-## What the local tests establish
+## Provider configuration
 
-- `server.py` serves the six-page website and API together. `POST /api/analyse` requires configured credentials and the correct analyst password, validates an exact official agenda URL and item identifier, and accepts substantive text plus an optional PDF up to 20 MB.
-- `pipeline/extract.py` requests a `DecisionCard`; `pipeline/explain.py` makes a separate request for a cited explanation. Returned item identifiers must match the requested item.
-- `pipeline/verify.py` flags quotations that do not occur in the submitted text/PDF. It does **not** discard all unsupported narrative or judge interpretation. Unverified stages are excluded from the status rule; citation flags remain visible for review.
-- `tests/test_ai_contract.py` checks the SDK request/response contract with a fake client. `tests/test_server.py` checks API access, input validation and mocked output handling without contacting Anthropic.
-- Successful analysis returns an `ai_unreviewed` preview with human review pending. The server does not save or publish it. GitHub Pages cannot run this analysis endpoint.
+Set a provider and the matching key, plus `CIVICCLEAR_ANALYST_PASSWORD`, in a private `.env` or host environment. `server.py` and the cache CLI load `.env`; the legacy Streamlit interface can use environment variables or Streamlit Secrets. Keys are never sent to browser code.
 
-## How an authorized administrator can perform the remaining test
+| Setting | DeepSeek | Claude |
+| --- | --- | --- |
+| `CIVICCLEAR_PROVIDER` | `deepseek` | `anthropic` |
+| Required provider key | `DEEPSEEK_API_KEY` | `ANTHROPIC_API_KEY` |
+| Default model when no override is set | `deepseek-flash` | Existing `claude-opus-5-5` |
+| Optional override | `CIVICCLEAR_MODEL` | `CIVICCLEAR_MODEL` |
 
-1. Review the official agenda text and any report for personal or sensitive information. The cleaner removes named Communications/Speakers sections from pasted text; it does not comprehensively redact text or uploaded PDF contents.
-2. Use Python 3.12 and install `requirements.txt`. Put `ANTHROPIC_API_KEY`, `CIVICCLEAR_ANALYST_PASSWORD` and `CIVICCLEAR_MODEL` in an uncommitted `.env` file or the host environment. Verify the chosen model against current Anthropic documentation before paying for a request. The configured default is not proof of account access or model availability.
-3. Run `python build_site.py`, then `python -m uvicorn server:app --reload`. Open `http://localhost:8000/analyse.html`; the server reads `.env` automatically. The legacy `streamlit run app.py` path remains separate and uses shell variables or Streamlit Secrets.
-4. Enter the analyst password, the exact official Toronto agenda URL, at least 100 characters of substantive sanitized source text, and optionally a reviewed PDF. Submitting the form sends the inputs through two Claude requests and can incur charges.
-5. Compare the returned item ID, decision status, quotations, wards, participation facts and uncertainties against the complete official sources. Record the date, model, outcome, observed cost and reviewer findings without recording credentials. A quotation match alone is not evidence that an interpretation is correct.
-6. Treat incomplete, unsupported or unverifiable results as a failed smoke test. Keep the curated records as the public default and do not publish unreviewed output. The curated examples also still require independent human sign-off.
+Remove or replace a model override when switching provider. If `CIVICCLEAR_PROVIDER` is absent, DeepSeek is selected only when its key exists and the Anthropic key does not; otherwise Anthropic is selected. Explicit selection avoids ambiguity if both keys are configured. The defaults are not proof that an account has access.
 
-**Paid API execution record: NOT EXECUTED.** No real Anthropic request has been performed in this workflow. A real run and its reviewer record are required before changing this status to passed.
+The [DeepSeek API documentation](https://api-docs.deepseek.com/) lists its current model names and API endpoint; its [JSON output guide](https://api-docs.deepseek.com/guides/json_mode/) describes the output mode used here. Check current provider documentation and account access before running a paid test.
+
+## What the paths do
+
+- The connected API requires the selected provider's configured key and the correct analyst password, checks the exact official agenda URL and item identifier, and accepts substantive text plus an optional PDF up to 20 MB. The cache CLI is an explicit operator action and does not require the web password.
+- Claude retains the existing two-pass Anthropic flow: a structured `DecisionCard`, then a native document-cited explanation.
+- DeepSeek makes two JSON requests. The first is validated as a `DecisionCard`; the second supplies explanation segments and model-provided quotation references. Those references are checked against the supplied sources. They are **not** native Anthropic citation objects or proof of correct interpretation.
+- For DeepSeek, PDF text is extracted locally before the request. Scanned or otherwise unreadable PDFs are rejected; no OCR or native PDF-input workflow is provided by this integration. Supply readable official text instead.
+- Local source checks exclude unmatched stages from the status rule and flag unmatched explanation quotations. They do not discard every unsupported narrative or establish that a statement is correct in context.
+- A successful connected analysis returns an `ai_unreviewed` preview with human review pending. It does not save or publish the result. The cache CLI can write explicitly requested unreviewed files. GitHub Pages has no analysis endpoint.
+
+## Remaining authorized live test
+
+1. Review the official text and report for personal or sensitive information. Removing named Communications/Speakers sections is not comprehensive redaction, and does not redact uploaded PDFs.
+2. Install the Python 3.12 requirements, choose one provider in the private environment, fill its API key and analyst password, and remove any stale model override. `.env.example` intentionally has blank secrets so copying it does not enable analysis.
+3. Run `python build_site.py`, then `python -m uvicorn server:app --reload`. Open `http://localhost:8000/analyse.html` and confirm the displayed provider before submitting.
+4. Enter the password, exact official Toronto agenda URL, and at least 100 characters of substantive sanitized source text. Optionally attach a reviewed readable PDF. Submitting sends the supplied source material to the selected provider through two requests and can incur charges.
+5. Compare the item ID, decision stages, quotation references, wards, participation facts and uncertainties against the complete official sources. Record the date, provider, actual model, outcome, observed cost and human reviewer findings without recording credentials.
+6. Treat incomplete, unsupported or unverifiable results as a failed smoke test. Keep the curated records as the default and do not publish unreviewed output. The curated examples still need independent human sign-off too.
+
+**Paid API execution record: NOT EXECUTED.** No real Claude or DeepSeek inference request has been performed in this work. A real request and its reviewer record are required before changing this status to passed.

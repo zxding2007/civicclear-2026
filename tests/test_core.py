@@ -113,6 +113,26 @@ def test_explanation_citations_verified():
     assert [v['verified'] for v in checked[0]['sources']] == [True, False]
 
 
+def test_explanation_checks_each_quotes_declared_document(monkeypatch):
+    monkeypatch.setattr('pipeline.verify.pdf_text', lambda _: 'Staff report wording.')
+    sources = [
+        {'document_index': 0, 'cited_text': 'Agenda wording.'},
+        {'document_index': 1, 'cited_text': 'Staff report wording.'},
+        {'document_index': 0, 'cited_text': 'Staff report wording.', 'verified': True},
+        {'document_index': 1, 'cited_text': 'Agenda wording.', 'verified': True},
+    ]
+    checked = verify_explanation_segments([{'text': 'Example', 'sources': sources}], 'Agenda wording.', b'report')
+    assert [s['verified'] for s in checked[0]['sources']] == [True, True, False, False]
+
+
+@pytest.mark.parametrize('index', [1, 2, -1, '0', True, None])
+def test_explanation_does_not_verify_missing_or_invalid_document(index):
+    checked = verify_explanation_segments([{'text': 'Example', 'sources': [
+        {'document_index': index, 'cited_text': 'Agenda wording.', 'verified': True},
+    ]}], 'Agenda wording.')
+    assert checked[0]['sources'][0]['verified'] is False
+
+
 def test_current_project_engagement_separate_from_committee_decision():
     folder = ROOT / 'data' / 'items' / '2026.PH29.2'
     record = json.loads((folder / 'card.json').read_text(encoding='utf-8'))

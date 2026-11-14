@@ -46,7 +46,16 @@ def verify_explanation_segments(segments: list[dict], item_page_text: str, pdf_b
         sources = []
         for source in segment.get('sources', []):
             s = dict(source)
-            s['verified'] = quote_is_in_sources(s.get('cited_text'), item_page_text, report_text)
+            document_index = s.get('document_index')
+            if 'document_index' not in s:
+                # Older curated examples do not specify a document index.
+                s['verified'] = quote_is_in_sources(s.get('cited_text'), item_page_text, report_text)
+            elif type(document_index) is int and document_index == 0:
+                s['verified'] = quote_is_in_sources(s.get('cited_text'), item_page_text)
+            elif type(document_index) is int and document_index == 1:
+                s['verified'] = quote_is_in_sources(s.get('cited_text'), report_text)
+            else:
+                s['verified'] = False
             sources.append(s)
         entry['sources'] = sources
         checked.append(entry)

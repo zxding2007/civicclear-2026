@@ -29,8 +29,9 @@ from calculator import compare
 from pipeline.clean import strip_personal_sections
 from pipeline.explain import explain_with_citations
 from pipeline.extract import extract_card
+from pipeline.provider import get_config
 from pipeline.status import overall_status
-from pipeline.verify import verify_card, verify_explanation_segments
+from pipeline.verify import pdf_text, verify_card, verify_explanation_segments
 
 MAX_PDF_BYTES = 20_000_000
 ITEM_ID = re.compile(r'20\d{2}\.[A-Z]+\d+\.\d+')
@@ -46,7 +47,10 @@ async def validation_error(_request, error: RequestValidationError):
 
 
 def analysis_enabled() -> bool:
-    return bool(os.getenv('CIVICCLEAR_ANALYST_PASSWORD') and os.getenv('ANTHROPIC_API_KEY'))
+    try:
+        return bool(os.getenv('CIVICCLEAR_ANALYST_PASSWORD') and get_config().api_key)
+    except ValueError:
+        return False
 
 
 @app.get('/api/health')
@@ -60,7 +64,14 @@ def bootstrap():
         data = build()
     except (OSError, ValueError, KeyError):
         raise HTTPException(503, 'The decision records could not be loaded. Please try again later.') from None
-    return {**data, 'runtime': {'mode': 'connected', 'analysis_enabled': analysis_enabled()}}
+    try:
+        provider = get_config().provider
+    except ValueError:
+        provider = None
+    return {**data, 'runtime': {
+        'mode': 'connected', 'analysis_enabled': analysis_enabled(),
+        'analysis_provider': provider,
+    }}
 
 
 class TaxRequest(BaseModel):
@@ -104,6 +115,7 @@ def analyse(
 ):
     if not analysis_enabled():
         raise HTTPException(503, 'New-item analysis is not configured. You can still explore the saved decisions.')
+    config = get_config()
     expected_password = os.environ['CIVICCLEAR_ANALYST_PASSWORD']
     if not hmac.compare_digest(password.encode('utf-8'), expected_password.encode('utf-8')):
         raise HTTPException(401, 'The analyst password is incorrect.')
@@ -120,6 +132,13 @@ def analyse(
             raise HTTPException(413, 'Choose a PDF no larger than 20 MB.')
         if not pdf.startswith(b'%PDF'):
             raise HTTPException(422, 'The report must be a standard PDF file.')
+        if config.provider == 'deepseek':
+            try:
+                readable = bool(pdf_text(pdf).strip())
+            except Exception:
+                readable = False
+            if not readable:
+                raise HTTPException(422, 'DeepSeek needs a PDF with selectable text. Choose a text-based PDF or paste the report text with the agenda record.')
 
     try:
         card = extract_card(cleaned, pdf)
@@ -149,6 +168,8 @@ def analyse(
             'source_checked_on': None,
             'human_review': 'pending',
             'generation_mode': 'ai_unreviewed',
+            'ai_provider': config.provider,
+            'ai_model': config.model,
         },
         'card': card.model_dump(),
         'checks': checks,
